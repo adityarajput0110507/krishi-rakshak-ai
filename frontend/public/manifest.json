@@ -1,0 +1,19 @@
+{
+  "name": "कृषि रक्षक (CropGuard AI) - Govt Agriculture Portal",
+  "short_name": "कृषि रक्षक",
+  "description": "92 भारतीय फसलों के रोग जांच, कीट पहचान, मौसम अलर्ट और सरकारी योजनाओं का डिजिटल किसान पोर्टल।",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F4F6F4",
+  "theme_color": "#14532D",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
+

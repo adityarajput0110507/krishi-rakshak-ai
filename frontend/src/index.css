@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Noto+Sans:wght@400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+  }
+
+  html.font-size-sm {
+    font-size: 14px;
+  }
+
+  html.font-size-md {
+    font-size: 16px;
+  }
+
+  html.font-size-lg {
+    font-size: 18px;
+  }
+
+  body {
+    background-color: #F4F6F4;
+    color: #1E293B;
+    font-family: 'Noto Sans', 'Noto Sans Devanagari', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+/* Official Indian Government Tricolour Top Accent */
+.tricolour-strip {
+  height: 4px;
+  background: linear-gradient(
+    to right,
+    #FF9933 0%,
+    #FF9933 33.33%,
+    #FFFFFF 33.33%,
+    #FFFFFF 66.66%,
+    #138808 66.66%,
+    #138808 100%
+  );
+}
+
+/* High Contrast Accessibility Mode (GIGW Standard) */
+body.high-contrast {
+  background-color: #000000 !important;
+  color: #FFFF00 !important;
+}
+
+body.high-contrast .agri-card,
+body.high-contrast .govt-card {
+  background-color: #111111 !important;
+  border-color: #FFFF00 !important;
+  color: #FFFFFF !important;
+}
+
+/* Government & Agricultural Portal Cards */
+.agri-card,
+.govt-card {
+  background-color: #FFFFFF;
+  border: 1px solid #CBD5E1;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+}
+
+.agri-card-hover {
+  transition: all 0.2s ease-in-out;
+}
+.agri-card-hover:hover {
+  border-color: #14532D;
+  box-shadow: 0 4px 12px rgba(20, 83, 45, 0.12);
+}
+
+/* Subtle ticker animation for Govt notices */
+@keyframes marqueeSlow {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.govt-ticker {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* Official Prescription Slip Print Styling (PDF Print) */
+@media print {
+  header,
+  footer,
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  .print-only-header {
+    display: block !important;
+  }
+
+  .agri-card,
+  .govt-card {
+    box-shadow: none !important;
+    border-color: #94A3B8 !important;
+  }
+}

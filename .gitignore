@@ -1,0 +1,39 @@
+# Local toolchains & dependencies
+tools/
+node_modules/
+frontend/node_modules/
+.venv/
+venv/
+env/
+
+# Python cache
+**/__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+
+# Environment secrets & local logs
+.env
+.env.local
+.env.*.local
+*.log
+
+# Local SQLite databases & dynamic user uploads (auto-seeded on deploy)
+*.db
+*.sqlite
+*.sqlite3
+backend/app/static/uploads/*
+!backend/app/static/uploads/.gitkeep
+
+# Built frontend artifacts (built fresh in Docker / CI)
+frontend/dist/
+dist/
+
+# Generated synthetic training images (keep generate_dataset.py & ml/saved_models/)
+ml/dataset/train/
+ml/dataset/val/
+
+# OS & editor junk
+.DS_Store
+Thumbs.db
+

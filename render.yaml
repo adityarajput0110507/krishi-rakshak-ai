@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: krishi-rakshak-cropguard
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true

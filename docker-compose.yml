@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: cropguard-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://cropguard:cropguard_secure_pwd@db:5432/cropguard_db
+      - SECRET_KEY=cropguard-sih26131-maharashtra-production-secret-2026
+    depends_on:
+      - db
+    volumes:
+      - ./backend/app/static/uploads:/app/app/static/uploads
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: cropguard-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  db:
+    image: postgres:15-alpine
+    container_name: cropguard-postgres
+    environment:
+      - POSTGRES_USER=cropguard
+      - POSTGRES_PASSWORD=cropguard_secure_pwd
+      - POSTGRES_DB=cropguard_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+

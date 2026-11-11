@@ -1,0 +1,124 @@
+{
+  "model_architecture": "RandomForest Classifier (36-dimensional Spectral Pathology Features)",
+  "training_samples": 560,
+  "validation_samples": 160,
+  "features_count": 36,
+  "overall_accuracy": 84.38,
+  "overall_f1": 84.25,
+  "classes": [
+    "cotton_bacterial_blight",
+    "cotton_boll_rot",
+    "cotton_healthy",
+    "cotton_leaf_curl_virus",
+    "maize_common_rust",
+    "maize_gray_leaf_spot",
+    "maize_healthy",
+    "maize_northern_leaf_blight",
+    "rice_bacterial_leaf_blight",
+    "rice_blast",
+    "rice_brown_spot",
+    "rice_healthy",
+    "soybean_frogeye_leaf_spot",
+    "soybean_healthy",
+    "soybean_rust",
+    "soybean_yellow_mosaic_virus"
+  ],
+  "per_class_metrics": {
+    "cotton_bacterial_blight": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "support": 10.0
+    },
+    "cotton_boll_rot": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "support": 10.0
+    },
+    "cotton_healthy": {
+      "precision": 1.0,
+      "recall": 0.8,
+      "f1_score": 0.889,
+      "support": 10.0
+    },
+    "cotton_leaf_curl_virus": {
+      "precision": 0.727,
+      "recall": 0.8,
+      "f1_score": 0.762,
+      "support": 10.0
+    },
+    "maize_common_rust": {
+      "precision": 0.9,
+      "recall": 0.9,
+      "f1_score": 0.9,
+      "support": 10.0
+    },
+    "maize_gray_leaf_spot": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "support": 10.0
+    },
+    "maize_healthy": {
+      "precision": 0.4,
+      "recall": 0.4,
+      "f1_score": 0.4,
+      "support": 10.0
+    },
+    "maize_northern_leaf_blight": {
+      "precision": 1.0,
+      "recall": 0.6,
+      "f1_score": 0.75,
+      "support": 10.0
+    },
+    "rice_bacterial_leaf_blight": {
+      "precision": 0.714,
+      "recall": 1.0,
+      "f1_score": 0.833,
+      "support": 10.0
+    },
+    "rice_blast": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "support": 10.0
+    },
+    "rice_brown_spot": {
+      "precision": 0.9,
+      "recall": 0.9,
+      "f1_score": 0.9,
+      "support": 10.0
+    },
+    "rice_healthy": {
+      "precision": 0.4,
+      "recall": 0.4,
+      "f1_score": 0.4,
+      "support": 10.0
+    },
+    "soybean_frogeye_leaf_spot": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "support": 10.0
+    },
+    "soybean_healthy": {
+      "precision": 0.833,
+      "recall": 1.0,
+      "f1_score": 0.909,
+      "support": 10.0
+    },
+    "soybean_rust": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "support": 10.0
+    },
+    "soybean_yellow_mosaic_virus": {
+      "precision": 0.778,
+      "recall": 0.7,
+      "f1_score": 0.737,
+      "support": 10.0
+    }
+  }
+}
