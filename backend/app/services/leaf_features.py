@@ -217,20 +217,24 @@ def extract_leaf_features_and_metrics(
     )
     full_vec = np.nan_to_num(full_vec, nan=0.0, posinf=0.0, neginf=0.0)
 
-    # Strict non-leaf & UI rejection gate
-    leaf_color_total = green_ratio + yellow_ratio + brown_ratio
-    non_plant_vivid = float(np.mean(((h > 0.44) & (h < 0.88)) & (s >= 0.20) & (v >= 0.18)))
-    is_digital_ui = (axis_edge_ratio >= 0.75) or (fol_flat_ratio >= 0.86 and axis_edge_ratio >= 0.50)
+    # Robust botanical leaf vs non-leaf / digital UI discrimination
+    plant_tissue_total = green_ratio + yellow_ratio + brown_ratio + rust_orange_ratio + tan_spot_ratio
+    has_plant_pigment = (plant_tissue_total >= 0.07) and (
+        (green_ratio >= 0.015) or ((yellow_ratio + brown_ratio + rust_orange_ratio) >= 0.035)
+    )
+
+    # Pure artificial non-plant colors (deep blue, indigo, magenta: H in [0.54, 0.88])
+    non_plant_vivid = float(np.mean(((h >= 0.54) & (h <= 0.88)) & (s >= 0.22) & (v >= 0.18)))
+
+    # Digital UI / screenshot with high axis-aligned linear edges or flat vector blocks
+    is_digital_ui = (axis_edge_ratio >= 0.78) or (fol_flat_ratio >= 0.90 and axis_edge_ratio >= 0.55)
+
+    has_texture = (gray_std >= 0.02) and (edge_soft_density >= 0.010)
 
     is_leaf_like = (
-        (green_ratio >= 0.06)
-        and (center_green_ratio >= 0.09)
-        and (leaf_color_total >= 0.14)
-        and (green_ratio >= (brown_ratio + yellow_ratio) * 0.20)
-        and (non_plant_vivid < 0.40)
-        and (fol_grad_mean >= 0.006)
-        and (edge_soft_density >= 0.015)
-        and (gray_std >= 0.03)
+        has_plant_pigment
+        and (non_plant_vivid < 0.35)
+        and has_texture
         and (not is_digital_ui)
     )
 
