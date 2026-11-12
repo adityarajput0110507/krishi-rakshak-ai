@@ -102,11 +102,14 @@ def extract_image_features(image_bytes: bytes) -> tuple[np.ndarray, Dict[str, An
     h_hist = list(h_hist / (np.sum(h_hist) + 1e-6))
     s_hist = list(s_hist / (np.sum(s_hist) + 1e-6))
 
-    # 4. Pathology Masks
-    green_mask = (h >= 0.18) & (h <= 0.48) & (s >= 0.15) & (v >= 0.15)
+    # 4. Pathology Masks (Botanical Chlorophyll Green with Excess Green Index ExG)
+    exg = 2.0 * g - r - b
+    green_mask = (h >= 0.19) & (h <= 0.42) & (s >= 0.18) & (v >= 0.15) & (exg > 0.05)
     green_ratio = float(np.mean(green_mask))
+    center_green_ratio = float(np.mean(green_mask[50:174, 50:174]))
+    non_plant_vivid = float(np.mean(((h > 0.44) & (h < 0.88)) & (s >= 0.20) & (v >= 0.18)))
 
-    yellow_mask = (h >= 0.10) & (h < 0.18) & (s >= 0.20) & (v >= 0.20)
+    yellow_mask = (h >= 0.10) & (h < 0.19) & (s >= 0.20) & (v >= 0.20)
     yellow_ratio = float(np.mean(yellow_mask))
 
     brown_mask = ((h < 0.10) | (h > 0.95)) & (s >= 0.18) & (v <= 0.70) & (v >= 0.10)
@@ -120,15 +123,24 @@ def extract_image_features(image_bytes: bytes) -> tuple[np.ndarray, Dict[str, An
     tan_spot_mask = (v >= 0.38) & (v <= 0.88) & (s >= 0.06) & (s <= 0.42) & ((g - r) < 0.03)
     tan_spot_ratio = float(np.mean(tan_spot_mask))
 
-    # 5. Texture & Gradient Analysis
+    # 5. Texture, Foliage Gradient & Anti-UI/Wall Analysis
     gray = 0.2989 * r + 0.5870 * g + 0.1140 * b
     gy, gx = np.gradient(gray)
     gradient_mag = np.sqrt(gx**2 + gy**2)
     edge_density = float(np.mean(gradient_mag > 0.08))
+    edge_soft_density = float(np.mean(gradient_mag > 0.06))
     gradient_mean = float(np.mean(gradient_mag))
     gradient_std = float(np.std(gradient_mag))
     gray_std = float(np.std(gray))
     texture_features = [edge_density, gradient_mean, gradient_std, gray_std]
+
+    fol_count = max(1, int(np.sum(green_mask)))
+    fol_grad_mean = float(np.mean(gradient_mag[green_mask])) if np.sum(green_mask) > 50 else 0.0
+    fol_flat_ratio = float(np.sum((gradient_mag < 0.005) & green_mask)) / fol_count
+    strong_edges = gradient_mag > 0.05
+    axis_edges = strong_edges & ((np.abs(gx) < 0.008) | (np.abs(gy) < 0.008))
+    axis_edge_ratio = float(np.sum(axis_edges)) / max(1, int(np.sum(strong_edges)))
+    is_digital_ui = (axis_edge_ratio >= 0.72) or (fol_flat_ratio >= 0.88 and axis_edge_ratio >= 0.60)
 
     feature_vector = np.array(
         rgb_means + rgb_stds + hsv_means + hsv_stds + h_hist + s_hist + pathology_ratios + texture_features,
@@ -138,10 +150,15 @@ def extract_image_features(image_bytes: bytes) -> tuple[np.ndarray, Dict[str, An
     combined_symptom = (yellow_ratio + brown_ratio + tan_spot_ratio) / (total_leaf + tan_spot_ratio)
     leaf_color_total = green_ratio + yellow_ratio + brown_ratio
     is_leaf_like = (
-        (green_ratio >= 0.06)
+        (green_ratio >= 0.08)
+        and (center_green_ratio >= 0.12)
         and (leaf_color_total >= 0.14)
         and (green_ratio >= (brown_ratio + yellow_ratio) * 0.25)
-        and ((gray_std >= 0.022) or (edge_density >= 0.003))
+        and (non_plant_vivid < 0.40)
+        and (fol_grad_mean >= 0.007)
+        and (edge_soft_density >= 0.015)
+        and (gray_std >= 0.03)
+        and (not is_digital_ui)
     )
 
     metrics = {
@@ -244,6 +261,36 @@ def analyze_crop_image(image_bytes: bytes, crop_type: str) -> Dict[str, Any]:
         if _MODEL is not None and _LABEL_ENCODER is not None:
             probs = _MODEL.predict_proba([feats])[0]
             classes = _LABEL_ENCODER.classes_
+
+            # Check cross-crop mismatch among the 4 ML-trained benchmark crops
+            crop_totals: Dict[str, float] = {}
+            for cls_name, pr in zip(classes, probs):
+                c_key = str(cls_name).split("_")[0]
+                crop_totals[c_key] = crop_totals.get(c_key, 0.0) + float(pr)
+
+            selected_crop_prob = crop_totals.get(crop_clean, 0.0)
+            other_crops = [(c, p) for c, p in crop_totals.items() if c != crop_clean]
+            other_crops.sort(key=lambda x: x[1], reverse=True)
+            if other_crops and selected_crop_prob < 0.095 and other_crops[0][1] >= 0.55:
+                likely_crop = other_crops[0][0].capitalize()
+                return {
+                    "ai_supported": True,
+                    "crop": crop_clean.capitalize(),
+                    "condition": f"गलत फसल चयन / पत्ती मेल नहीं खाती (Likely {likely_crop}, not {crop_clean.capitalize()})",
+                    "condition_key": "unsupported",
+                    "is_healthy": False,
+                    "confidence": round(float(other_crops[0][1]), 2),
+                    "severity": SeverityEnum.MILD,
+                    "symptoms": f"अपलोड की गई पत्ती चुनी हुई फसल ({crop_clean.capitalize()}) की नहीं लग रही — यह संभवतः {likely_crop} या किसी अन्य फसल की पत्ती है।",
+                    "cultural_control": f"कृपया ऊपर ड्रॉपडाउन में सही फसल ({likely_crop}) चुनकर दोबारा जांच करें।",
+                    "biological_control": "गलत फसल चुनने पर गलत दवाई की सलाह दी जा सकती है, इसलिए पहले सही फसल चुनें।",
+                    "chemical_control": "सही फसल की पुष्टि होने से पहले छिड़काव न करें।",
+                    "safety_advisory": "बिना सही फसल व रोग पुष्टि के रासायनिक दवा न डालें।",
+                    "when_to_contact": "सही फसल का नाम चुनकर पत्ती को दोबारा अपलोड करें।",
+                    "damage_percentage": 0.0,
+                    "unsupported": True,
+                }
+
             prefix = f"{crop_clean}_"
             crop_candidates = [
                 (cls_name, probs[idx])

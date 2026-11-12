@@ -310,6 +310,10 @@ export const PestDetectionPage: React.FC = () => {
               </div>
             </div>
 
+            <div className="p-2.5 bg-amber-50 border border-amber-200 rounded-xl text-[11px] font-semibold text-amber-900 leading-relaxed">
+              केवल फसल की पत्ती, कीट या फेरोमोन/येलो ट्रैप की साफ फोटो डालें — दीवार, कपड़ा, स्क्रीनशॉट या गैर-फसली चीज़ें अस्वीकार कर दी जाएंगी।
+            </div>
+
             {/* Step 2: Upload Pest Photo */}
             <div>
               <label className="text-sm font-extrabold text-[#26332B] flex items-center space-x-1.5 mb-2.5">
@@ -508,7 +512,7 @@ export const PestDetectionPage: React.FC = () => {
               {result.unsupported && (
                 <div className="p-4 bg-amber-50 border-2 border-amber-400 rounded-xl text-xs text-amber-950 font-bold flex items-start space-x-2">
                   <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-                  <span>कृपया अच्छी रोशनी में कीट, पत्ती या ट्रैप की साफ तस्वीर अपलोड करें।</span>
+                  <span>{result.advisory_summary || 'कृपया अच्छी रोशनी में कीट, पत्ती या ट्रैप की साफ तस्वीर अपलोड करें।'}</span>
                 </div>
               )}
               

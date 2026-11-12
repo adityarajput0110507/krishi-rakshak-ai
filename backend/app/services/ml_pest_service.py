@@ -116,15 +116,42 @@ def detect_pests_in_image(image_bytes: bytes, crop_hint: str = "cotton") -> Dict
     s[max_c > 1e-5] = delta[max_c > 1e-5] / max_c[max_c > 1e-5]
     v = max_c
 
-    green_ratio = float(np.mean((h >= 0.18) & (h <= 0.48) & (s >= 0.15) & (v >= 0.15)))
+    exg = 2.0 * g - r - b
+    foliage_mask = (h >= 0.19) & (h <= 0.42) & (s >= 0.18) & (v >= 0.15) & (exg > 0.05)
+    green_ratio = float(np.mean(foliage_mask))
+    center_green_ratio = float(np.mean(foliage_mask[90:326, 90:326]))
+    non_plant_vivid = float(np.mean(((h > 0.44) & (h < 0.88)) & (s >= 0.20) & (v >= 0.18)))
+
     yellow_trap_ratio = float(np.mean((h >= 0.11) & (h <= 0.21) & (s >= 0.45) & (v >= 0.45)))
     blue_trap_ratio = float(np.mean((h >= 0.53) & (h <= 0.70) & (s >= 0.40) & (v >= 0.25)))
 
     gy, gx = np.gradient(gray)
-    edge_density = float(np.mean(np.sqrt(gx**2 + gy**2) > 0.08))
+    grad = np.sqrt(gx**2 + gy**2)
+    edge_density = float(np.mean(grad > 0.06))
+    edge_soft_density = float(np.mean(grad > 0.020))
+    fol_n = max(1, int(np.sum(foliage_mask)))
+    fol_grad_mean = float(np.mean(grad[foliage_mask])) if np.sum(foliage_mask) > 100 else 0.0
+    fol_flat_ratio = float(np.sum((grad < 0.003) & foliage_mask)) / fol_n if np.sum(foliage_mask) > 100 else 1.0
+    strong_edges = grad > 0.035
+    axis_edges = strong_edges & ((np.abs(gx) < 0.006) | (np.abs(gy) < 0.006))
+    axis_edge_ratio = float(np.sum(axis_edges)) / max(1, int(np.sum(strong_edges)))
+    is_digital_ui = (axis_edge_ratio >= 0.75) or (fol_flat_ratio >= 0.86 and axis_edge_ratio >= 0.50)
 
-    is_foliage = (green_ratio >= 0.06) and ((std_val >= 0.022) or (edge_density >= 0.003))
-    is_sticky_trap = (yellow_trap_ratio >= 0.25) or (blue_trap_ratio >= 0.25)
+    is_foliage = (
+        (green_ratio >= 0.08)
+        and (center_green_ratio >= 0.12)
+        and (non_plant_vivid < 0.40)
+        and (fol_grad_mean >= 0.0055)
+        and (edge_soft_density >= 0.015)
+        and (fol_flat_ratio < 0.86)
+        and (not is_digital_ui)
+    )
+    is_sticky_trap = (
+        ((yellow_trap_ratio >= 0.25) or (blue_trap_ratio >= 0.25))
+        and (edge_soft_density >= 0.012)
+        and (std_val >= 0.03)
+        and (not is_digital_ui)
+    )
 
     # Reject completely blank images or non-agricultural photos (selfies, desks, walls, rooms)
     if (std_val < 0.02 and max_rgb_std < 0.025) or not (is_foliage or is_sticky_trap):

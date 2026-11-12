@@ -385,6 +385,10 @@ export const DiseaseDetectionPage: React.FC = () => {
               </div>
             </div>
 
+            <div className="p-2.5 bg-amber-50 border border-amber-200 rounded-xl text-[11px] font-semibold text-amber-900 leading-relaxed">
+              केवल चुनी हुई फसल की नज़दीकी पत्ती की साफ फोटो डालें — दीवार, कपड़ा, स्क्रीनशॉट या गैर-फसली चीज़ें अस्वीकार कर दी जाएंगी। (4 प्रमुख फसलों में गलत फसल चुनने पर चेतावनी भी दी जाती है)
+            </div>
+
             {/* Step 2: Upload or Camera */}
             <div>
               <label className="text-sm font-extrabold text-[#26332B] flex items-center space-x-1.5 mb-2.5">
@@ -601,14 +605,14 @@ export const DiseaseDetectionPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Non-Leaf Photo Polite Alert */}
+              {/* Non-Leaf / Crop Mismatch Polite Alert */}
               {result.unsupported && (
                 <div className="p-4 bg-amber-50 border-2 border-amber-400 rounded-xl text-xs sm:text-sm text-amber-950 font-bold flex items-start space-x-3">
                   <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
                   <div>
-                    <div>कृपया केवल फसल की पत्ती की साफ फोटो डालें!</div>
+                    <div>{result.condition || 'कृपया केवल चुनी हुई फसल की पत्ती की साफ फोटो डालें!'}</div>
                     <div className="text-xs font-medium text-amber-900 mt-0.5">
-                      यह छवि फसल की पत्ती जैसी नहीं लग रही है। अच्छी रोशनी में पत्ती की साफ तस्वीर अपलोड करें।
+                      {result.symptoms || 'यह छवि फसल की पत्ती जैसी नहीं लग रही है। अच्छी रोशनी में पत्ती की साफ तस्वीर अपलोड करें।'}
                     </div>
                   </div>
                 </div>
@@ -640,7 +644,7 @@ export const DiseaseDetectionPage: React.FC = () => {
                   {result.unsupported ? (
                     <div className="inline-flex items-center space-x-1.5 px-3.5 py-1.5 bg-amber-600 text-white rounded-xl text-xs font-extrabold shadow">
                       <AlertCircle className="w-4 h-4" />
-                      <span>साफ पत्ती की फोटो लगाएं</span>
+                      <span>{result.condition?.includes('गलत फसल') || result.condition?.includes('Likely ') ? 'सही फसल चुनें' : 'साफ पत्ती की फोटो लगाएं'}</span>
                     </div>
                   ) : result.is_healthy ? (
                     <div className="inline-flex items-center space-x-1.5 px-3.5 py-1.5 bg-emerald-600 text-white rounded-xl text-xs font-extrabold shadow">
