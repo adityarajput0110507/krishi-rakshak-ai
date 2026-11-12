@@ -454,6 +454,45 @@ export const PestDetectionPage: React.FC = () => {
         {/* Right Column: Spatial Detection & Remedies */}
         <div className="lg:col-span-7">
           {result ? (
+            result.unsupported ? (
+              <div className="agri-card p-6 sm:p-8 space-y-5 border-2 border-red-400 bg-red-50/40">
+                <div className="flex items-start space-x-3 pb-4 border-b border-red-200">
+                  <div className="w-11 h-11 rounded-2xl bg-red-100 text-red-700 flex items-center justify-center shrink-0 border border-red-300">
+                    <ShieldAlert className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <span className="inline-block text-[11px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-red-600 text-white mb-1.5">
+                      कीट जांच अस्वीकार (Invalid Image)
+                    </span>
+                    <h3 className="text-lg sm:text-xl font-extrabold text-red-950">
+                      {result.pest_category || 'पत्ती या कीट ट्रैप की साफ फोटो नहीं मिली'}
+                    </h3>
+                  </div>
+                </div>
+
+                <div className="p-4 bg-white rounded-xl border border-red-200 text-xs sm:text-sm text-red-950 font-medium leading-relaxed">
+                  {result.advisory_summary || 'अपलोड की गई फोटो फसल की पत्ती, कीट या ट्रैप जैसी नहीं लग रही है। इसलिए कोई भी कीट गणना या स्प्रे सलाह नहीं दिखाई गई है।'}
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                  <button
+                    type="button"
+                    onClick={clearImage}
+                    className="flex-1 py-3 px-4 bg-[#245C3A] hover:bg-[#173D2A] text-white font-extrabold text-xs sm:text-sm rounded-xl transition-colors shadow-sm flex items-center justify-center space-x-2"
+                  >
+                    <Upload className="w-4 h-4" />
+                    <span>सही पत्ती / ट्रैप फोटो चुनें (Upload Valid Photo)</span>
+                  </button>
+                  <a
+                    href="tel:18001801551"
+                    className="py-3 px-4 bg-sky-700 hover:bg-sky-800 text-white font-bold text-xs rounded-xl transition-colors flex items-center justify-center space-x-1.5 shrink-0"
+                  >
+                    <PhoneCall className="w-4 h-4" />
+                    <span>कॉल 1800-180-1551</span>
+                  </a>
+                </div>
+              </div>
+            ) : (
             <div className="agri-card p-6 space-y-5">
 
               {/* Printable Official Slip Header */}
@@ -666,6 +705,7 @@ export const PestDetectionPage: React.FC = () => {
               </div>
 
             </div>
+            )
           ) : (
             <div className="agri-card p-12 text-center flex flex-col items-center justify-center h-full min-h-[460px]">
               <div className="w-18 h-18 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-[#245C3A] mb-4 p-4">
