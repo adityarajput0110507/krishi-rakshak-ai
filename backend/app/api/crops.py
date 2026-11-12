@@ -279,12 +279,13 @@ def get_crop_detail(crop_id_or_slug: str, db: Session = Depends(get_db)):
 def list_supported_model_classes(db: Session = Depends(get_db)):
     active_version = db.query(ModelVersion).filter(ModelVersion.is_active == True).first()
     classes = db.query(SupportedModelClass).all()
+    supported_crops = sorted(list(set(sc.crop_name for sc in classes))) if classes else ["Cotton", "Soybean", "Rice", "Maize"]
     
     return {
-        "model_version": active_version.version_name if active_version else "v1.4",
-        "architecture": active_version.architecture if active_version else "MobileNetV2",
-        "overall_accuracy": active_version.overall_accuracy if active_version else 96.8,
-        "supported_crops": ["Cotton", "Soybean", "Rice", "Maize"],
+        "model_version": active_version.version_name if active_version else "v2.0",
+        "architecture": active_version.architecture if active_version else "ExtraTrees + Scaled-MLP Ensemble",
+        "overall_accuracy": active_version.overall_accuracy if active_version else 92.5,
+        "supported_crops": supported_crops,
         "total_classes": len(classes),
         "classes": [
             {

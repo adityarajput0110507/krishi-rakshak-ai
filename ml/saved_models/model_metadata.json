@@ -1,123 +1,570 @@
 {
-  "model_architecture": "RandomForest Classifier (36-dimensional Spectral Pathology Features)",
-  "training_samples": 560,
-  "validation_samples": 160,
-  "features_count": 36,
-  "overall_accuracy": 84.38,
-  "overall_f1": 84.25,
-  "classes": [
-    "cotton_bacterial_blight",
-    "cotton_boll_rot",
-    "cotton_healthy",
-    "cotton_leaf_curl_virus",
-    "maize_common_rust",
-    "maize_gray_leaf_spot",
-    "maize_healthy",
-    "maize_northern_leaf_blight",
-    "rice_bacterial_leaf_blight",
-    "rice_blast",
-    "rice_brown_spot",
-    "rice_healthy",
-    "soybean_frogeye_leaf_spot",
-    "soybean_healthy",
-    "soybean_rust",
-    "soybean_yellow_mosaic_virus"
+  "model_architecture": "RandomForest (134-dim Multi-Scale Plant Pathology Descriptor)",
+  "dataset_type": "Real-World & Benchmark Multi-Crop Leaf Photos (PlantVillage + PlantDoc + Cotton + Wheat + Sugarcane + Mango + Papaya + Project-AgML)",
+  "training_samples": 2395,
+  "validation_samples": 665,
+  "features_count": 134,
+  "trained_crops_count": 22,
+  "trained_crops": [
+    "apple",
+    "brinjal",
+    "capsicum",
+    "chilli",
+    "cotton",
+    "cucumber",
+    "grapes",
+    "maize",
+    "mango",
+    "okra",
+    "onion",
+    "orange",
+    "papaya",
+    "pomegranate",
+    "potato",
+    "pumpkin",
+    "rice",
+    "soybean",
+    "sugarcane",
+    "sunflower",
+    "tomato",
+    "wheat"
   ],
+  "overall_accuracy": 62.86,
+  "crop_identification_accuracy": 77.59,
+  "overall_f1": 60.37,
+  "classes": [
+    "apple__apple_scab",
+    "apple__black_rot",
+    "apple__cedar_apple_rust",
+    "apple__healthy",
+    "apple__powdery_mildew",
+    "brinjal__phytophthora_blight",
+    "capsicum__bacterial_spot",
+    "capsicum__healthy",
+    "chilli__healthy",
+    "chilli__powdery_mildew",
+    "cotton__diseased_leaf",
+    "cotton__healthy",
+    "cucumber__anthracnose",
+    "grapes__black_rot",
+    "grapes__esca_black_measles",
+    "grapes__healthy",
+    "grapes__leaf_blight",
+    "maize__common_rust",
+    "maize__gray_leaf_spot",
+    "maize__healthy",
+    "maize__northern_leaf_blight",
+    "mango__anthracnose",
+    "mango__bacterial_canker",
+    "mango__die_back",
+    "mango__gall_midge",
+    "mango__healthy",
+    "mango__powdery_mildew",
+    "mango__sooty_mould",
+    "okra__leaf_curly_virus",
+    "onion__healthy",
+    "orange__citrus_greening",
+    "papaya__healthy",
+    "papaya__leaf_disease",
+    "pomegranate__colletotrichum_spp",
+    "potato__early_blight",
+    "potato__healthy",
+    "potato__late_blight",
+    "pumpkin__powdery_mildew",
+    "rice__leaf_blast",
+    "soybean__healthy",
+    "sugarcane__healthy",
+    "sugarcane__mosaic_virus",
+    "sugarcane__red_rot",
+    "sugarcane__rust",
+    "sugarcane__yellow_leaf_disease",
+    "sunflower__healthy",
+    "tomato__bacterial_spot",
+    "tomato__early_blight",
+    "tomato__healthy",
+    "tomato__late_blight",
+    "tomato__leaf_mold",
+    "tomato__septoria_leaf_spot",
+    "tomato__spider_mites",
+    "tomato__target_spot",
+    "tomato__tomato_leaf_curl_virus",
+    "tomato__tomato_mosaic_virus",
+    "wheat__crown_root_rot",
+    "wheat__healthy",
+    "wheat__leaf_rust",
+    "wheat__loose_smut"
+  ],
+  "per_crop_metrics": {
+    "apple": {
+      "crop_id_accuracy": 69.6,
+      "disease_accuracy": 55.4,
+      "val_samples": 56
+    },
+    "brinjal": {
+      "crop_id_accuracy": 100.0,
+      "disease_accuracy": 100.0,
+      "val_samples": 10
+    },
+    "capsicum": {
+      "crop_id_accuracy": 29.2,
+      "disease_accuracy": 29.2,
+      "val_samples": 24
+    },
+    "chilli": {
+      "crop_id_accuracy": 100.0,
+      "disease_accuracy": 93.8,
+      "val_samples": 16
+    },
+    "cotton": {
+      "crop_id_accuracy": 87.5,
+      "disease_accuracy": 70.8,
+      "val_samples": 24
+    },
+    "cucumber": {
+      "crop_id_accuracy": 70.0,
+      "disease_accuracy": 70.0,
+      "val_samples": 10
+    },
+    "grapes": {
+      "crop_id_accuracy": 95.0,
+      "disease_accuracy": 87.5,
+      "val_samples": 40
+    },
+    "maize": {
+      "crop_id_accuracy": 82.6,
+      "disease_accuracy": 58.7,
+      "val_samples": 46
+    },
+    "mango": {
+      "crop_id_accuracy": 100.0,
+      "disease_accuracy": 94.0,
+      "val_samples": 84
+    },
+    "okra": {
+      "crop_id_accuracy": 100.0,
+      "disease_accuracy": 100.0,
+      "val_samples": 10
+    },
+    "onion": {
+      "crop_id_accuracy": 80.0,
+      "disease_accuracy": 80.0,
+      "val_samples": 10
+    },
+    "orange": {
+      "crop_id_accuracy": 100.0,
+      "disease_accuracy": 100.0,
+      "val_samples": 10
+    },
+    "papaya": {
+      "crop_id_accuracy": 47.6,
+      "disease_accuracy": 42.9,
+      "val_samples": 21
+    },
+    "pomegranate": {
+      "crop_id_accuracy": 100.0,
+      "disease_accuracy": 100.0,
+      "val_samples": 10
+    },
+    "potato": {
+      "crop_id_accuracy": 55.9,
+      "disease_accuracy": 50.0,
+      "val_samples": 34
+    },
+    "pumpkin": {
+      "crop_id_accuracy": 58.3,
+      "disease_accuracy": 58.3,
+      "val_samples": 12
+    },
+    "rice": {
+      "crop_id_accuracy": 90.0,
+      "disease_accuracy": 90.0,
+      "val_samples": 10
+    },
+    "soybean": {
+      "crop_id_accuracy": 50.0,
+      "disease_accuracy": 50.0,
+      "val_samples": 12
+    },
+    "sugarcane": {
+      "crop_id_accuracy": 93.3,
+      "disease_accuracy": 48.3,
+      "val_samples": 60
+    },
+    "sunflower": {
+      "crop_id_accuracy": 90.0,
+      "disease_accuracy": 90.0,
+      "val_samples": 10
+    },
+    "tomato": {
+      "crop_id_accuracy": 62.9,
+      "disease_accuracy": 41.4,
+      "val_samples": 116
+    },
+    "wheat": {
+      "crop_id_accuracy": 72.5,
+      "disease_accuracy": 45.0,
+      "val_samples": 40
+    }
+  },
   "per_class_metrics": {
-    "cotton_bacterial_blight": {
-      "precision": 1.0,
+    "apple__apple_scab": {
+      "precision": 0.2,
+      "recall": 0.083,
+      "f1_score": 0.118,
+      "support": 12.0
+    },
+    "apple__black_rot": {
+      "precision": 0.818,
+      "recall": 0.9,
+      "f1_score": 0.857,
+      "support": 10.0
+    },
+    "apple__cedar_apple_rust": {
+      "precision": 0.571,
+      "recall": 0.333,
+      "f1_score": 0.421,
+      "support": 12.0
+    },
+    "apple__healthy": {
+      "precision": 0.5,
+      "recall": 0.583,
+      "f1_score": 0.538,
+      "support": 12.0
+    },
+    "apple__powdery_mildew": {
+      "precision": 0.667,
       "recall": 1.0,
-      "f1_score": 1.0,
+      "f1_score": 0.8,
       "support": 10.0
     },
-    "cotton_boll_rot": {
-      "precision": 1.0,
+    "brinjal__phytophthora_blight": {
+      "precision": 0.909,
       "recall": 1.0,
-      "f1_score": 1.0,
+      "f1_score": 0.952,
       "support": 10.0
     },
-    "cotton_healthy": {
-      "precision": 1.0,
-      "recall": 0.8,
-      "f1_score": 0.889,
-      "support": 10.0
+    "capsicum__bacterial_spot": {
+      "precision": 0.5,
+      "recall": 0.25,
+      "f1_score": 0.333,
+      "support": 12.0
     },
-    "cotton_leaf_curl_virus": {
-      "precision": 0.727,
-      "recall": 0.8,
-      "f1_score": 0.762,
-      "support": 10.0
+    "capsicum__healthy": {
+      "precision": 0.667,
+      "recall": 0.333,
+      "f1_score": 0.444,
+      "support": 12.0
     },
-    "maize_common_rust": {
+    "chilli__healthy": {
       "precision": 0.9,
       "recall": 0.9,
       "f1_score": 0.9,
       "support": 10.0
     },
-    "maize_gray_leaf_spot": {
-      "precision": 1.0,
+    "chilli__powdery_mildew": {
+      "precision": 0.857,
       "recall": 1.0,
-      "f1_score": 1.0,
+      "f1_score": 0.923,
+      "support": 6.0
+    },
+    "cotton__diseased_leaf": {
+      "precision": 0.6,
+      "recall": 0.5,
+      "f1_score": 0.545,
+      "support": 12.0
+    },
+    "cotton__healthy": {
+      "precision": 0.55,
+      "recall": 0.917,
+      "f1_score": 0.688,
+      "support": 12.0
+    },
+    "cucumber__anthracnose": {
+      "precision": 0.538,
+      "recall": 0.7,
+      "f1_score": 0.609,
       "support": 10.0
     },
-    "maize_healthy": {
-      "precision": 0.4,
-      "recall": 0.4,
-      "f1_score": 0.4,
+    "grapes__black_rot": {
+      "precision": 0.5,
+      "recall": 0.9,
+      "f1_score": 0.643,
       "support": 10.0
     },
-    "maize_northern_leaf_blight": {
-      "precision": 1.0,
-      "recall": 0.6,
+    "grapes__esca_black_measles": {
+      "precision": 0.8,
+      "recall": 0.8,
+      "f1_score": 0.8,
+      "support": 10.0
+    },
+    "grapes__healthy": {
+      "precision": 0.643,
+      "recall": 0.9,
       "f1_score": 0.75,
       "support": 10.0
     },
-    "rice_bacterial_leaf_blight": {
-      "precision": 0.714,
-      "recall": 1.0,
-      "f1_score": 0.833,
-      "support": 10.0
-    },
-    "rice_blast": {
-      "precision": 1.0,
-      "recall": 1.0,
-      "f1_score": 1.0,
-      "support": 10.0
-    },
-    "rice_brown_spot": {
-      "precision": 0.9,
+    "grapes__leaf_blight": {
+      "precision": 0.5,
       "recall": 0.9,
-      "f1_score": 0.9,
+      "f1_score": 0.643,
       "support": 10.0
     },
-    "rice_healthy": {
-      "precision": 0.4,
-      "recall": 0.4,
-      "f1_score": 0.4,
-      "support": 10.0
+    "maize__common_rust": {
+      "precision": 0.875,
+      "recall": 0.583,
+      "f1_score": 0.7,
+      "support": 12.0
     },
-    "soybean_frogeye_leaf_spot": {
-      "precision": 1.0,
-      "recall": 1.0,
-      "f1_score": 1.0,
-      "support": 10.0
+    "maize__gray_leaf_spot": {
+      "precision": 0.45,
+      "recall": 0.75,
+      "f1_score": 0.562,
+      "support": 12.0
     },
-    "soybean_healthy": {
+    "maize__healthy": {
       "precision": 0.833,
       "recall": 1.0,
       "f1_score": 0.909,
       "support": 10.0
     },
-    "soybean_rust": {
+    "maize__northern_leaf_blight": {
+      "precision": 0.143,
+      "recall": 0.083,
+      "f1_score": 0.105,
+      "support": 12.0
+    },
+    "mango__anthracnose": {
+      "precision": 0.923,
+      "recall": 1.0,
+      "f1_score": 0.96,
+      "support": 12.0
+    },
+    "mango__bacterial_canker": {
+      "precision": 0.923,
+      "recall": 1.0,
+      "f1_score": 0.96,
+      "support": 12.0
+    },
+    "mango__die_back": {
+      "precision": 1.0,
+      "recall": 0.917,
+      "f1_score": 0.957,
+      "support": 12.0
+    },
+    "mango__gall_midge": {
+      "precision": 0.909,
+      "recall": 0.833,
+      "f1_score": 0.87,
+      "support": 12.0
+    },
+    "mango__healthy": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "support": 12.0
+    },
+    "mango__powdery_mildew": {
+      "precision": 0.8,
+      "recall": 1.0,
+      "f1_score": 0.889,
+      "support": 12.0
+    },
+    "mango__sooty_mould": {
+      "precision": 0.909,
+      "recall": 0.833,
+      "f1_score": 0.87,
+      "support": 12.0
+    },
+    "okra__leaf_curly_virus": {
       "precision": 1.0,
       "recall": 1.0,
       "f1_score": 1.0,
       "support": 10.0
     },
-    "soybean_yellow_mosaic_virus": {
-      "precision": 0.778,
-      "recall": 0.7,
-      "f1_score": 0.737,
+    "onion__healthy": {
+      "precision": 0.889,
+      "recall": 0.8,
+      "f1_score": 0.842,
+      "support": 10.0
+    },
+    "orange__citrus_greening": {
+      "precision": 0.667,
+      "recall": 1.0,
+      "f1_score": 0.8,
+      "support": 10.0
+    },
+    "papaya__healthy": {
+      "precision": 0.455,
+      "recall": 0.556,
+      "f1_score": 0.5,
+      "support": 9.0
+    },
+    "papaya__leaf_disease": {
+      "precision": 0.364,
+      "recall": 0.333,
+      "f1_score": 0.348,
+      "support": 12.0
+    },
+    "pomegranate__colletotrichum_spp": {
+      "precision": 0.833,
+      "recall": 1.0,
+      "f1_score": 0.909,
+      "support": 10.0
+    },
+    "potato__early_blight": {
+      "precision": 0.7,
+      "recall": 0.583,
+      "f1_score": 0.636,
+      "support": 12.0
+    },
+    "potato__healthy": {
+      "precision": 0.667,
+      "recall": 1.0,
+      "f1_score": 0.8,
+      "support": 10.0
+    },
+    "potato__late_blight": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "support": 12.0
+    },
+    "pumpkin__powdery_mildew": {
+      "precision": 0.467,
+      "recall": 0.583,
+      "f1_score": 0.519,
+      "support": 12.0
+    },
+    "rice__leaf_blast": {
+      "precision": 0.6,
+      "recall": 0.9,
+      "f1_score": 0.72,
+      "support": 10.0
+    },
+    "soybean__healthy": {
+      "precision": 0.75,
+      "recall": 0.5,
+      "f1_score": 0.6,
+      "support": 12.0
+    },
+    "sugarcane__healthy": {
+      "precision": 0.471,
+      "recall": 0.667,
+      "f1_score": 0.552,
+      "support": 12.0
+    },
+    "sugarcane__mosaic_virus": {
+      "precision": 0.571,
+      "recall": 0.333,
+      "f1_score": 0.421,
+      "support": 12.0
+    },
+    "sugarcane__red_rot": {
+      "precision": 0.444,
+      "recall": 0.667,
+      "f1_score": 0.533,
+      "support": 12.0
+    },
+    "sugarcane__rust": {
+      "precision": 0.278,
+      "recall": 0.417,
+      "f1_score": 0.333,
+      "support": 12.0
+    },
+    "sugarcane__yellow_leaf_disease": {
+      "precision": 0.4,
+      "recall": 0.333,
+      "f1_score": 0.364,
+      "support": 12.0
+    },
+    "sunflower__healthy": {
+      "precision": 0.818,
+      "recall": 0.9,
+      "f1_score": 0.857,
+      "support": 10.0
+    },
+    "tomato__bacterial_spot": {
+      "precision": 0.714,
+      "recall": 0.417,
+      "f1_score": 0.526,
+      "support": 12.0
+    },
+    "tomato__early_blight": {
+      "precision": 0.667,
+      "recall": 0.333,
+      "f1_score": 0.444,
+      "support": 12.0
+    },
+    "tomato__healthy": {
+      "precision": 0.8,
+      "recall": 0.333,
+      "f1_score": 0.471,
+      "support": 12.0
+    },
+    "tomato__late_blight": {
+      "precision": 0.714,
+      "recall": 0.417,
+      "f1_score": 0.526,
+      "support": 12.0
+    },
+    "tomato__leaf_mold": {
+      "precision": 0.5,
+      "recall": 0.333,
+      "f1_score": 0.4,
+      "support": 12.0
+    },
+    "tomato__septoria_leaf_spot": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1_score": 0.0,
+      "support": 12.0
+    },
+    "tomato__spider_mites": {
+      "precision": 0.45,
+      "recall": 0.9,
+      "f1_score": 0.6,
+      "support": 10.0
+    },
+    "tomato__target_spot": {
+      "precision": 0.8,
+      "recall": 0.8,
+      "f1_score": 0.8,
+      "support": 10.0
+    },
+    "tomato__tomato_leaf_curl_virus": {
+      "precision": 0.429,
+      "recall": 0.25,
+      "f1_score": 0.316,
+      "support": 12.0
+    },
+    "tomato__tomato_mosaic_virus": {
+      "precision": 0.75,
+      "recall": 0.5,
+      "f1_score": 0.6,
+      "support": 12.0
+    },
+    "wheat__crown_root_rot": {
+      "precision": 0.529,
+      "recall": 0.9,
+      "f1_score": 0.667,
+      "support": 10.0
+    },
+    "wheat__healthy": {
+      "precision": 0.571,
+      "recall": 0.4,
+      "f1_score": 0.471,
+      "support": 10.0
+    },
+    "wheat__leaf_rust": {
+      "precision": 0.4,
+      "recall": 0.4,
+      "f1_score": 0.4,
+      "support": 10.0
+    },
+    "wheat__loose_smut": {
+      "precision": 0.333,
+      "recall": 0.1,
+      "f1_score": 0.154,
       "support": 10.0
     }
   }

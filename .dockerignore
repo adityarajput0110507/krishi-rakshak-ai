@@ -15,4 +15,6 @@ backend/app/static/uploads/*
 *.log
 ml/dataset/train/
 ml/dataset/val/
+ml/dataset/_repos/
+ml/real_dataset/
 

@@ -29,9 +29,11 @@ backend/app/static/uploads/*
 frontend/dist/
 dist/
 
-# Generated synthetic training images (keep generate_dataset.py & ml/saved_models/)
+# Generated/downloaded training images (keep scripts & ml/saved_models/)
 ml/dataset/train/
 ml/dataset/val/
+ml/dataset/_repos/
+ml/real_dataset/
 
 # OS & editor junk
 .DS_Store
