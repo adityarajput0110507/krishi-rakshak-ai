@@ -116,6 +116,10 @@ def extract_image_features(image_bytes: bytes) -> tuple[np.ndarray, Dict[str, An
     symptom_ratio = (yellow_ratio + brown_ratio) / total_leaf
     pathology_ratios = [green_ratio, yellow_ratio, brown_ratio, float(symptom_ratio)]
 
+    # Pale necrotic / tan blight spots on foliage (distinct from pure white studio background)
+    tan_spot_mask = (v >= 0.38) & (v <= 0.88) & (s >= 0.06) & (s <= 0.42) & ((g - r) < 0.03)
+    tan_spot_ratio = float(np.mean(tan_spot_mask))
+
     # 5. Texture & Gradient Analysis
     gray = 0.2989 * r + 0.5870 * g + 0.1140 * b
     gy, gx = np.gradient(gray)
@@ -131,15 +135,25 @@ def extract_image_features(image_bytes: bytes) -> tuple[np.ndarray, Dict[str, An
         dtype=np.float32
     )
 
+    combined_symptom = (yellow_ratio + brown_ratio + tan_spot_ratio) / (total_leaf + tan_spot_ratio)
+    leaf_color_total = green_ratio + yellow_ratio + brown_ratio
+    is_leaf_like = (
+        (green_ratio >= 0.06)
+        and (leaf_color_total >= 0.14)
+        and (green_ratio >= (brown_ratio + yellow_ratio) * 0.25)
+        and ((gray_std >= 0.022) or (edge_density >= 0.003))
+    )
+
     metrics = {
         "green_ratio": green_ratio,
         "yellow_ratio": yellow_ratio,
         "brown_ratio": brown_ratio,
+        "tan_spot_ratio": tan_spot_ratio,
         "edge_density": edge_density,
         "gray_std": gray_std,
-        "damage_percentage": round(min(100.0, max(0.0, float(symptom_ratio) * 100.0)), 1),
+        "damage_percentage": round(min(100.0, max(0.0, float(combined_symptom) * 100.0)), 1),
         "aspect_ratio": width / max(1, height),
-        "is_leaf_like": (green_ratio + yellow_ratio + brown_ratio > 0.14) and (gray_std > 0.03),
+        "is_leaf_like": is_leaf_like,
     }
 
     return feature_vector, metrics
@@ -215,37 +229,10 @@ def analyze_crop_image(image_bytes: bytes, crop_type: str) -> Dict[str, Any]:
     damage_pct = metrics["damage_percentage"]
     brown = metrics["brown_ratio"]
     yellow = metrics["yellow_ratio"]
+    tan_spot = metrics["tan_spot_ratio"]
     edge = metrics["edge_density"]
 
-    # Check for healthy leaf condition
-    if damage_pct < 8.0 and brown < 0.04 and yellow < 0.06:
-        is_healthy = True
-        predicted_condition = f"Healthy {crop_clean.capitalize()} Foliage (स्वस्थ फसल)"
-        condition_key = "healthy"
-        confidence = round(float(min(0.97, 0.90 + (0.07 * (1.0 - damage_pct / 8.0)))), 2)
-        severity = SeverityEnum.HEALTHY
-        
-        return {
-            "ai_supported": True,
-            "crop": crop_clean.capitalize(),
-            "condition": predicted_condition,
-            "condition_key": condition_key,
-            "is_healthy": True,
-            "confidence": confidence,
-            "severity": severity,
-            "symptoms": f"Vibrant deep green foliage with uniform pigmentation, no chlorotic yellowing or necrotic lesion margins observed.",
-            "cultural_control": "Maintain balanced NPK fertilization and clean field channels free of waterlogging.",
-            "biological_control": "Preserve beneficial natural predator bio-agents (ladybird beetles, predatory spiders, lacewings).",
-            "chemical_control": "No chemical application required. Crop is healthy.",
-            "safety_advisory": "Standard agricultural occupational safety.",
-            "when_to_contact": "Record crop health stage periodically in CropGuard AI.",
-            "damage_percentage": damage_pct,
-            "unsupported": False,
-            "model_used": "CropGuard-AllIndia-Pathology"
-        }
-
-    # Diseased Foliage:
-    # 1. Check if crop is one of the 4 benchmark models
+    # 1. If crop is one of the 4 benchmark Random Forest models, run ML model FIRST
     if crop_clean in CORE_CROP_CLASSES:
         global _MODEL, _LABEL_ENCODER
         if _MODEL is None:
@@ -272,12 +259,35 @@ def analyze_crop_image(image_bytes: bytes, crop_type: str) -> Dict[str, Any]:
                 confidence = round(float(min(0.97, max(0.68, normalized_prob))), 2)
                 predicted_condition = best_class.replace(prefix, "")
 
-        if damage_pct < 15.0:
+                # Guard against false Healthy prediction when clear visible spots or viral curling exist
+                if predicted_condition == "healthy" and (
+                    brown >= 0.010 or yellow >= 0.012 or tan_spot >= 0.010 or edge >= 0.070
+                ):
+                    non_healthy = [(c, p) for c, p in crop_candidates if not c.endswith("_healthy")]
+                    if non_healthy:
+                        if edge >= 0.070:
+                            curl_pick = next(
+                                ((c, p) for c, p in non_healthy if "curl" in c or "mosaic" in c or "virus" in c),
+                                non_healthy[0]
+                            )
+                            best_class, raw_prob = curl_pick
+                        else:
+                            best_class, raw_prob = non_healthy[0]
+                        predicted_condition = best_class.replace(prefix, "")
+                        confidence = round(float(min(0.92, max(0.66, (raw_prob / crop_prob_sum) + 0.35))), 2)
+
+        if predicted_condition == "healthy":
+            severity = SeverityEnum.HEALTHY
+        elif damage_pct < 15.0:
             severity = SeverityEnum.MILD
         elif damage_pct <= 40.0:
             severity = SeverityEnum.MODERATE
         else:
             severity = SeverityEnum.SEVERE
+
+        effective_damage = damage_pct
+        if predicted_condition != "healthy":
+            effective_damage = round(max(damage_pct, min(45.0, edge * 140.0 if edge >= 0.065 else 8.5)), 1)
 
         rec = get_crop_recommendation(crop_clean, predicted_condition)
         return {
@@ -294,30 +304,60 @@ def analyze_crop_image(image_bytes: bytes, crop_type: str) -> Dict[str, Any]:
             "chemical_control": rec.get("chemical", ""),
             "safety_advisory": rec.get("safety", ""),
             "when_to_contact": rec.get("contact_officer", ""),
-            "damage_percentage": damage_pct,
+            "damage_percentage": effective_damage,
             "unsupported": False,
             "model_used": "CropGuard-Pathology-RF-36dim"
         }
 
-    # 2. General Indian Crop Pathology Diagnosis (for all other 88 crops: Wheat, Tomato, Potato, Sugarcane, Mango, Onion, etc.)
+    # 2. General Indian Crop Pathology Diagnosis (88 other crops)
+    # Only classify as Healthy when chlorosis, necrosis, tan lesions, and viral curling distortion are all minimal
+    if yellow < 0.008 and brown < 0.006 and tan_spot < 0.012 and edge < 0.065:
+        confidence = round(float(min(0.97, 0.90 + (0.07 * (1.0 - min(1.0, damage_pct / 8.0))))), 2)
+        return {
+            "ai_supported": True,
+            "crop": crop_clean.capitalize(),
+            "condition": f"Healthy {crop_clean.capitalize()} Foliage (स्वस्थ फसल)",
+            "condition_key": "healthy",
+            "is_healthy": True,
+            "confidence": confidence,
+            "severity": SeverityEnum.HEALTHY,
+            "symptoms": "Vibrant deep green foliage with uniform pigmentation, no chlorotic yellowing or necrotic lesion margins observed.",
+            "cultural_control": "Maintain balanced NPK fertilization and clean field channels free of waterlogging.",
+            "biological_control": "Preserve beneficial natural predator bio-agents (ladybird beetles, predatory spiders, lacewings).",
+            "chemical_control": "No chemical application required. Crop is healthy.",
+            "safety_advisory": "Standard agricultural occupational safety.",
+            "when_to_contact": "Record crop health stage periodically in CropGuard AI.",
+            "damage_percentage": damage_pct,
+            "unsupported": False,
+            "model_used": "CropGuard-AllIndia-Pathology"
+        }
+
     db_diseases = get_crop_diseases_from_db(crop_clean)
-    
+
     if not db_diseases:
-        # Fallback to recommendation service or generic ICAR pathology
         rec = get_crop_recommendation("cotton", "bacterial_blight")
         disease_name = f"{crop_clean.capitalize()} Foliar Blight / Leaf Spot"
         condition_key = "leaf_spot"
     else:
-        # Pick the most matching disease based on symptoms & spectral cues
-        if yellow > 0.18 and brown < 0.10:
-            # Chlorosis / Mosaic / Rust
-            selected = next((d for d in db_diseases if "rust" in d["condition"].lower() or "mosaic" in d["condition"].lower() or "yellow" in d["condition"].lower()), db_diseases[0])
-        elif brown > 0.15 and edge > 0.12:
-            # Necrotic spot / Blight / Canker
-            selected = next((d for d in db_diseases if "blight" in d["condition"].lower() or "spot" in d["condition"].lower() or "scab" in d["condition"].lower()), db_diseases[0])
-        else:
-            selected = db_diseases[0]
-            
+        def _score_disease(d: Dict[str, Any], idx: int) -> float:
+            text = (d.get("condition", "") + " " + d.get("symptoms", "")).lower()
+            score = 0.0
+            if edge >= 0.065 or yellow >= 0.015:
+                if any(k in text for k in ["curl", "mosaic", "virus", "yellow", "chlorosis", "rust"]):
+                    score += 3.0 + (yellow * 20.0) + (edge * 10.0)
+            if brown >= 0.010:
+                if any(k in text for k in ["blight", "spot", "rot", "anthracnose", "scab", "canker", "brown", "necrotic"]):
+                    score += 2.5 + (brown * 25.0)
+            if tan_spot >= 0.010:
+                if any(k in text for k in ["mildew", "blast", "spot", "blight", "wilt", "powdery"]):
+                    score += 2.0 + (tan_spot * 20.0)
+            # Small deterministic tie-breaker so index order doesn't always dominate when features are close
+            return score - (idx * 0.01)
+
+        selected = max(
+            (d for d in db_diseases),
+            key=lambda d: _score_disease(d, db_diseases.index(d))
+        )
         disease_name = selected["condition"]
         condition_key = selected["condition_key"]
         rec = selected
