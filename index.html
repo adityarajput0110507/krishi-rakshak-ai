@@ -1,1229 +1,261 @@
 <!DOCTYPE html>
-<html lang="hi" dir="ltr">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
-    <title>कृषि रक्षक (CropGuard AI) | राष्ट्रीय फसल स्वास्थ्य, कीट निगरानी व ICAR परामर्श पोर्टल</title>
-    <meta name="description" content="भारत सरकार एवं कृषि विभाग द्वारा प्रमाणित AI आधारित फसल रोग पहचान, कीट नियंत्रण व 92 भारतीय फसलों की वैज्ञानिक ICAR मार्गदर्शिका।" />
-    <link rel="icon" type="image/svg+xml" href="frontend/public/icon.svg" />
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700;800;900&family=Noto+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Krishi Rakshak (CropGuard AI) | Department of Agriculture Portal</title>
     <style>
-      :root {
-        --gov-saffron: #FF9933;
-        --gov-white: #FFFFFF;
-        --gov-green: #14532D;
-        --gov-light-green: #15803D;
-        --gov-navy: #0F2942;
-        --gov-bg: #F4F6F4;
-        --gov-card-bg: #FFFFFF;
-        --gov-text: #1E293B;
-        --gov-muted: #64748B;
-        --gov-border: #E2E8F0;
-        --gov-amber: #D97706;
-        --gov-red: #DC2626;
-      }
-
-      * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
-
+      * { box-sizing: border-box; }
       body {
-        font-family: 'Noto Sans Devanagari', 'Noto Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-        background-color: var(--gov-bg);
-        color: var(--gov-text);
-        line-height: 1.6;
-        -webkit-font-smoothing: antialiased;
-      }
-
-      /* Indian Tricolor Stripe */
-      .tricolor-stripe {
-        height: 5px;
-        background: linear-gradient(90deg, #FF9933 0%, #FF9933 33.3%, #FFFFFF 33.3%, #FFFFFF 66.6%, #138808 66.6%, #138808 100%);
-        width: 100%;
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-      }
-
-      /* Top Utility Bar */
-      .top-utility-bar {
-        background-color: #0B1E2E;
-        color: #E2E8F0;
-        font-size: 12px;
-        padding: 6px 24px;
+        margin: 0;
+        font-family: "Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background-color: #F4F6F4;
+        color: #1E293B;
         display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 10px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      }
-
-      .top-utility-bar a {
-        color: #FDE68A;
-        text-decoration: none;
-        font-weight: 600;
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-      }
-
-      .top-utility-bar a:hover {
-        text-decoration: underline;
-      }
-
-      .helpline-pill {
-        background: #14532D;
-        color: #FFFFFF;
-        padding: 3px 10px;
-        border-radius: 20px;
-        font-weight: 700;
-        letter-spacing: 0.3px;
-        border: 1px solid #15803D;
-      }
-
-      /* Main Header */
-      .main-header {
-        background: #FFFFFF;
-        border-bottom: 2px solid #E2E8F0;
-        box-shadow: 0 4px 12px rgba(15, 41, 66, 0.04);
-        padding: 16px 24px;
-      }
-
-      .header-container {
-        max-width: 1280px;
-        margin: 0 auto;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 16px;
-      }
-
-      .brand-box {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-      }
-
-      .brand-emblem {
-        width: 58px;
-        height: 58px;
-        background: var(--gov-green);
-        border: 2.5px solid var(--gov-saffron);
-        border-radius: 50%;
-        display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
-        font-size: 28px;
-        color: #FFFFFF;
-        box-shadow: 0 4px 10px rgba(20, 83, 45, 0.2);
+        min-height: 100vh;
+        padding: 24px 16px;
+        border-top: 5px solid #FF9933;
       }
-
-      .brand-text h1 {
-        font-size: 22px;
-        font-weight: 800;
-        color: var(--gov-navy);
-        line-height: 1.2;
+      .card {
+        background: #ffffff;
+        border: 1px solid #CBD5E1;
+        border-top: 6px solid #0F2942;
+        border-radius: 16px;
+        padding: 48px 44px;
+        max-width: 720px;
+        width: 100%;
+        text-align: center;
+        box-shadow: 0 12px 36px rgba(15, 41, 66, 0.12);
       }
-
-      .brand-text p {
-        font-size: 12.5px;
-        color: var(--gov-light-green);
-        font-weight: 700;
-        letter-spacing: 0.2px;
-      }
-
-      .header-actions {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        flex-wrap: wrap;
-      }
-
-      /* Hero Banner */
-      .hero-banner {
-        background: linear-gradient(135deg, #0F2942 0%, #173E29 60%, #14532D 100%);
-        color: #FFFFFF;
-        padding: 48px 24px;
-        position: relative;
-        overflow: hidden;
-      }
-
-      .hero-banner::after {
-        content: "🌾";
-        position: absolute;
-        right: 4%;
-        bottom: -20px;
-        font-size: 200px;
-        opacity: 0.07;
-        pointer-events: none;
-      }
-
-      .hero-container {
-        max-width: 1280px;
-        margin: 0 auto;
-        display: grid;
-        grid-template-columns: 1.2fr 0.8fr;
-        gap: 36px;
-        align-items: center;
-      }
-
-      @media (max-width: 900px) {
-        .hero-container {
-          grid-template-columns: 1fr;
-        }
-      }
-
-      .hero-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        background: rgba(255, 255, 255, 0.12);
-        border: 1px solid rgba(255, 255, 255, 0.25);
-        padding: 5px 14px;
-        border-radius: 30px;
-        font-size: 12px;
-        font-weight: 700;
+      .icon {
+        width: 82px;
+        height: 82px;
+        background-color: #14532D;
         color: #FDE68A;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 38px;
         margin-bottom: 16px;
+        border: 3.5px solid #FF9933;
+        box-shadow: 0 4px 14px rgba(20, 83, 45, 0.2);
       }
-
-      .hero-title {
-        font-size: 34px;
-        font-weight: 900;
-        line-height: 1.25;
-        margin-bottom: 14px;
+      .gov-badge {
+        font-size: 12px;
+        font-weight: 800;
+        color: #14532D;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        margin-bottom: 8px;
       }
-
-      .hero-title span {
-        color: #FBBF24;
-      }
-
-      .hero-desc {
-        font-size: 15.5px;
-        color: #E2E8F0;
-        margin-bottom: 24px;
-        max-width: 650px;
-        line-height: 1.6;
-      }
-
-      .hero-cta-group {
-        display: flex;
-        gap: 14px;
-        flex-wrap: wrap;
-      }
-
-      .btn-hero-primary {
-        background: #FF9933;
+      h1 {
+        font-size: 28px;
+        font-weight: 800;
+        margin: 0 0 8px 0;
         color: #0F2942;
-        font-weight: 800;
+        letter-spacing: -0.3px;
+      }
+      p.subtitle {
         font-size: 15px;
-        padding: 13px 26px;
-        border-radius: 8px;
-        text-decoration: none;
-        box-shadow: 0 4px 15px rgba(255, 153, 51, 0.4);
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        transition: all 0.2s ease;
+        color: #64748B;
+        margin: 0 0 28px 0;
+        line-height: 1.5;
+        font-weight: 500;
       }
-
-      .btn-hero-primary:hover {
-        background: #F5820D;
-        transform: translateY(-2px);
+      .status-box {
+        background: #F8FAF7;
+        border: 1.5px solid #E3E9E1;
+        border-radius: 12px;
+        padding: 18px 24px;
+        margin-bottom: 26px;
+        text-align: left;
       }
-
-      .btn-hero-secondary {
-        background: rgba(255, 255, 255, 0.12);
-        color: #FFFFFF;
-        font-weight: 700;
-        font-size: 15px;
-        padding: 13px 22px;
-        border-radius: 8px;
-        text-decoration: none;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        transition: all 0.2s ease;
-      }
-
-      .btn-hero-secondary:hover {
-        background: rgba(255, 255, 255, 0.2);
-      }
-
-      /* Control Deck Card */
-      .control-deck {
-        background: #FFFFFF;
-        color: var(--gov-text);
-        border-radius: 14px;
-        padding: 24px;
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
-        border: 1px solid rgba(255, 255, 255, 0.8);
-      }
-
-      .deck-title {
-        font-size: 16px;
-        font-weight: 800;
-        color: var(--gov-navy);
-        margin-bottom: 14px;
+      .status-row {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        font-size: 14.5px;
+        padding: 7px 0;
       }
-
-      .status-pill {
+      .status-label {
+        color: #334155;
+        font-weight: 600;
+      }
+      .status-badge {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
-        padding: 3px 10px;
-        border-radius: 20px;
-        font-size: 11.5px;
+        gap: 8px;
+        padding: 4px 14px;
+        border-radius: 14px;
+        font-size: 13px;
         font-weight: 700;
       }
-
-      .pill-online {
-        background: #DCFCE7;
+      .badge-online {
+        background-color: #DCFCE7;
         color: #15803D;
       }
-
-      .pill-checking {
-        background: #FEF3C7;
+      .badge-checking {
+        background-color: #FEF3C7;
         color: #B45309;
       }
-
-      .pill-offline {
-        background: #FEE2E2;
+      .badge-offline {
+        background-color: #FEE2E2;
         color: #B91C1C;
       }
-
-      .pulse-dot {
+      .dot {
         width: 8px;
         height: 8px;
         border-radius: 50%;
         background-color: currentColor;
-        animation: pulseDot 1.4s infinite ease-in-out;
       }
-
-      @keyframes pulseDot {
-        0%, 100% { opacity: 1; transform: scale(1); }
-        50% { opacity: 0.4; transform: scale(0.85); }
-      }
-
-      .status-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-        margin-bottom: 18px;
-      }
-
-      .status-item {
-        background: #F8FAFC;
-        border: 1px solid #E2E8F0;
-        border-radius: 8px;
-        padding: 10px 12px;
-      }
-
-      .status-item-label {
-        font-size: 11px;
-        font-weight: 600;
-        color: var(--gov-muted);
-        text-transform: uppercase;
-        margin-bottom: 4px;
-      }
-
-      .status-item-val {
-        font-size: 13px;
-        font-weight: 700;
-        color: var(--gov-navy);
-        display: flex;
-        align-items: center;
-        gap: 6px;
-      }
-
-      /* Main Page Container */
-      .page-wrapper {
-        max-width: 1280px;
-        margin: 0 auto;
-        padding: 36px 24px;
-      }
-
-      .section-heading {
-        margin-bottom: 24px;
-      }
-
-      .section-title {
-        font-size: 24px;
-        font-weight: 800;
-        color: var(--gov-navy);
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-
-      .section-sub {
-        font-size: 14px;
-        color: var(--gov-muted);
-        margin-top: 4px;
-      }
-
-      /* Quick Diagnostics Sandbox */
-      .sandbox-card {
-        background: #FFFFFF;
-        border: 1px solid var(--gov-border);
-        border-top: 4px solid var(--gov-light-green);
-        border-radius: 12px;
-        padding: 28px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
-        margin-bottom: 36px;
-      }
-
-      .sandbox-grid {
-        display: grid;
-        grid-template-columns: 1fr 1.2fr;
-        gap: 28px;
-      }
-
-      @media (max-width: 850px) {
-        .sandbox-grid {
-          grid-template-columns: 1fr;
-        }
-      }
-
-      .dropzone {
-        border: 2px dashed #CBD5E1;
-        border-radius: 10px;
-        background: #F8FAFC;
-        padding: 24px;
-        text-align: center;
-        cursor: pointer;
-        transition: all 0.2s ease;
-      }
-
-      .dropzone:hover {
-        border-color: var(--gov-light-green);
-        background: #F0FDF4;
-      }
-
-      .dropzone-icon {
-        font-size: 42px;
-        margin-bottom: 8px;
-      }
-
-      .crop-select {
+      .btn-primary {
+        display: block;
         width: 100%;
-        padding: 10px 14px;
-        border: 1.5px solid #CBD5E1;
-        border-radius: 8px;
-        font-size: 14px;
-        color: var(--gov-navy);
-        background: #FFFFFF;
-        margin-top: 8px;
-        margin-bottom: 14px;
-        font-family: inherit;
-        font-weight: 600;
-      }
-
-      .btn-scan {
-        width: 100%;
-        background: var(--gov-green);
-        color: #FFFFFF;
-        font-size: 15px;
-        font-weight: 700;
-        padding: 12px 20px;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: background 0.2s;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 8px;
-      }
-
-      .btn-scan:hover {
-        background: #0E3E21;
-      }
-
-      .scan-result-card {
-        background: #F8FAFC;
-        border: 1px solid #E2E8F0;
-        border-radius: 10px;
-        padding: 20px;
-        min-height: 240px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-      }
-
-      /* 92 Crops Directory */
-      .crop-categories-bar {
-        display: flex;
-        gap: 8px;
-        overflow-x: auto;
-        padding-bottom: 12px;
-        margin-bottom: 20px;
-      }
-
-      .cat-pill {
-        background: #FFFFFF;
-        border: 1px solid #CBD5E1;
-        padding: 8px 16px;
-        border-radius: 20px;
-        font-size: 13px;
-        font-weight: 700;
-        color: var(--gov-navy);
-        cursor: pointer;
-        white-space: nowrap;
-        transition: all 0.15s ease;
-      }
-
-      .cat-pill.active, .cat-pill:hover {
-        background: var(--gov-green);
-        color: #FFFFFF;
-        border-color: var(--gov-green);
-      }
-
-      .crop-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-        gap: 16px;
-        margin-bottom: 40px;
-      }
-
-      .crop-card {
-        background: #FFFFFF;
-        border: 1px solid var(--gov-border);
-        border-radius: 10px;
-        padding: 16px;
-        transition: transform 0.15s, box-shadow 0.15s;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-      }
-
-      .crop-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
-        border-color: #A5D6A7;
-      }
-
-      .crop-badge-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 8px;
-      }
-
-      .crop-cat-tag {
-        font-size: 10.5px;
-        font-weight: 700;
-        text-transform: uppercase;
-        color: var(--gov-light-green);
-        background: #E8F5E9;
-        padding: 2px 8px;
-        border-radius: 12px;
-      }
-
-      .crop-ai-tag {
-        font-size: 10px;
-        font-weight: 800;
-        background: #EFF6FF;
-        color: #1D4ED8;
-        padding: 2px 6px;
-        border-radius: 4px;
-        border: 1px solid #BFDBFE;
-      }
-
-      .crop-name {
-        font-size: 16px;
-        font-weight: 800;
-        color: var(--gov-navy);
-      }
-
-      .crop-sci {
-        font-size: 12px;
-        font-style: italic;
-        color: var(--gov-muted);
-        margin-bottom: 10px;
-      }
-
-      .crop-details {
-        font-size: 12px;
-        color: #475569;
-        line-height: 1.5;
-        border-top: 1px solid #F1F5F9;
-        padding-top: 8px;
-      }
-
-      /* Key Features Grid */
-      .features-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 20px;
-        margin-bottom: 40px;
-      }
-
-      .feature-box {
-        background: #FFFFFF;
-        border: 1px solid var(--gov-border);
-        border-radius: 12px;
-        padding: 22px;
-        border-left: 4px solid var(--gov-navy);
-      }
-
-      .feature-box h3 {
-        font-size: 16px;
-        font-weight: 800;
-        color: var(--gov-navy);
-        margin-bottom: 8px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-
-      .feature-box p {
-        font-size: 13.5px;
-        color: var(--gov-muted);
-        line-height: 1.55;
-      }
-
-      /* Official Footer */
-      .gov-footer {
-        background: #0B1E2E;
-        color: #94A3B8;
-        padding: 40px 24px 20px;
-        font-size: 13px;
-        border-top: 3px solid var(--gov-saffron);
-      }
-
-      .footer-container {
-        max-width: 1280px;
-        margin: 0 auto;
-        display: grid;
-        grid-template-columns: 2fr 1fr 1fr;
-        gap: 36px;
-        margin-bottom: 30px;
-      }
-
-      @media (max-width: 800px) {
-        .footer-container {
-          grid-template-columns: 1fr;
-        }
-      }
-
-      .footer-title {
-        color: #FFFFFF;
-        font-size: 15px;
-        font-weight: 800;
-        margin-bottom: 12px;
-      }
-
-      .footer-links {
-        list-style: none;
-      }
-
-      .footer-links li {
-        margin-bottom: 8px;
-      }
-
-      .footer-links a {
-        color: #CBD5E1;
+        background-color: #245C3A;
+        color: #ffffff;
         text-decoration: none;
-        transition: color 0.15s;
+        font-weight: 700;
+        font-size: 16.5px;
+        padding: 16px 24px;
+        border-radius: 12px;
+        box-shadow: 0 4px 14px rgba(36, 92, 58, 0.28);
+        transition: all 0.2s ease;
+        border: none;
+        cursor: pointer;
+        letter-spacing: 0.2px;
       }
-
-      .footer-links a:hover {
-        color: var(--gov-saffron);
+      .btn-primary:hover {
+        background-color: #173D2A;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(36, 92, 58, 0.35);
       }
-
-      .footer-bottom {
-        max-width: 1280px;
-        margin: 0 auto;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        padding-top: 16px;
+      .links-row {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 10px;
-        font-size: 12px;
+        gap: 14px;
+        margin-top: 14px;
+      }
+      .btn-secondary {
+        flex: 1;
+        display: inline-block;
+        background: #F1F5F0;
+        color: #245C3A;
+        text-decoration: none;
+        font-size: 13.5px;
+        font-weight: 600;
+        padding: 11px 16px;
+        border-radius: 10px;
+        transition: background 0.15s ease;
+        border: 1px solid #E2E8F0;
+      }
+      .btn-secondary:hover {
+        background: #E3E9E0;
+      }
+      .instructions {
+        margin-top: 26px;
+        padding-top: 20px;
+        border-top: 1px dashed #E3E9E1;
+        font-size: 13px;
+        color: #64748B;
+        text-align: left;
+        line-height: 1.7;
+      }
+      .instructions strong {
+        color: #1E293B;
+      }
+      code {
+        background: #ECEFE8;
+        padding: 3px 7px;
+        border-radius: 5px;
+        font-size: 12.5px;
+        color: #173D2A;
+        font-family: monospace;
       }
     </style>
   </head>
   <body>
-    <!-- Indian Tricolor Ribbon -->
-    <div class="tricolor-stripe"></div>
-
-    <!-- Official Top Utility Bar -->
-    <div class="top-utility-bar">
-      <div>
-        <span>भारत सरकार | कृषि एवं किसान कल्याण मंत्रालय | ICAR मान्यता प्राप्त</span>
+    <div class="card">
+      <div class="icon">🌾</div>
+      <div class="gov-badge">
+        भारत सरकार | कृषि विभाग सेवा पोर्टल
       </div>
-      <div style="display: flex; align-items: center; gap: 14px;">
-        <span class="helpline-pill">📞 किसान कॉल सेंटर (निःशुल्क): 1800-180-1551</span>
-        <a href="#diagnostics">⚡ सिस्टम स्थिति</a>
-        <a href="#crops-directory">🌾 92 फसलें</a>
+      <h1>कृषि रक्षक (CropGuard AI)</h1>
+      <p class="subtitle">National Crop Disease & Pest Advisory Portal (92 Indian Crops)</p>
+
+      <div class="status-box">
+        <div class="status-row">
+          <span class="status-label">Web Portal (Port 3000)</span>
+          <span id="fe-status" class="status-badge badge-checking"><span class="dot"></span>Checking...</span>
+        </div>
+        <div class="status-row" style="margin-top: 6px;">
+          <span class="status-label">Diagnostic Server (Port 8000)</span>
+          <span id="be-status" class="status-badge badge-checking"><span class="dot"></span>Checking...</span>
+        </div>
+      </div>
+
+      <a id="open-btn" class="btn-primary" href="http://localhost:3000">पोर्टल खोलें (Open Portal) &rarr;</a>
+      
+      <div class="links-row">
+        <a class="btn-secondary" href="http://localhost:8000" target="_blank">Open via Port 8000</a>
+        <a class="btn-secondary" href="http://localhost:8000/docs" target="_blank">API Docs (Swagger)</a>
+      </div>
+
+      <div class="instructions">
+        <strong>💡 Server Status & Help:</strong><br />
+        - If the status shows <strong>Online</strong>, you will be redirected automatically in a moment.<br />
+        - If you see <strong>Offline</strong>, double-click <code>start_cropguard.bat</code> in the project folder to start both servers.
       </div>
     </div>
 
-    <!-- Main Header -->
-    <header class="main-header">
-      <div class="header-container">
-        <div class="brand-box">
-          <div class="brand-emblem">🌾</div>
-          <div class="brand-text">
-            <h1>कृषि रक्षक (CropGuard AI)</h1>
-            <p>National Crop Health, Pest Surveillance & ICAR Advisory Portal</p>
-          </div>
-        </div>
-        <div class="header-actions">
-          <a href="http://localhost:3000" id="header-portal-btn" class="btn-hero-primary" style="padding: 10px 18px; font-size: 14px;">
-            पोर्टल खोलें (Open Portal) &rarr;
-          </a>
-          <a href="http://localhost:8000/docs" target="_blank" class="btn-hero-secondary" style="color: var(--gov-navy); border-color: #CBD5E1; padding: 10px 14px; font-size: 13px;">
-            API Docs (Swagger)
-          </a>
-        </div>
-      </div>
-    </header>
-
-    <!-- Hero Banner with Live Control Deck -->
-    <section class="hero-banner">
-      <div class="hero-container">
-        <div>
-          <div class="hero-badge">
-            <span>🇮🇳 राष्ट्रीय कृषि डिजिटल मिशन (Digital Agriculture Mission)</span>
-          </div>
-          <h2 class="hero-title">
-            भारत की <span>92 फसलों</span> के लिए AI आधारित रोग व कीट निदान
-          </h2>
-          <p class="hero-desc">
-            3,060+ असली कृषि पत्ती तस्वीरों पर प्रशिक्षित 134-आयामी (134-dim) मल्टी-स्केल मॉडल। 
-            झूठे स्क्रीनशॉट व पोस्टर रिजेक्शन और ICAR-प्रमाणित वैज्ञानिक उपचार के साथ किसानों को तुरंत समाधान।
-          </p>
-          <div class="hero-cta-group">
-            <a href="http://localhost:3000" id="hero-main-btn" class="btn-hero-primary">
-              🚀 पूर्ण वेब पोर्टल पर जाएं (Port 3000)
-            </a>
-            <a href="#instant-scanner" class="btn-hero-secondary">
-              📸 तुरंत पत्ती जांचें (Quick Scan)
-            </a>
-          </div>
-        </div>
-
-        <!-- Live Server Status Control Deck -->
-        <div class="control-deck" id="diagnostics">
-          <div class="deck-title">
-            <span>सिस्टम स्थिति (Live Servers)</span>
-            <span id="overall-status" class="status-pill pill-checking">
-              <span class="pulse-dot"></span>जांच जारी...
-            </span>
-          </div>
-
-          <div class="status-grid">
-            <div class="status-item">
-              <div class="status-item-label">Web UI (Vite)</div>
-              <div id="port-3000-val" class="status-item-val" style="color: var(--gov-amber);">
-                <span>Port 3000</span>
-              </div>
-            </div>
-            <div class="status-item">
-              <div class="status-item-label">AI Backend (FastAPI)</div>
-              <div id="port-8000-val" class="status-item-val" style="color: var(--gov-amber);">
-                <span>Port 8000</span>
-              </div>
-            </div>
-            <div class="status-item">
-              <div class="status-item-label">AI Model Classes</div>
-              <div class="status-item-val">
-                <span>60 ट्रेंड श्रेणियां (22 फसलें)</span>
-              </div>
-            </div>
-            <div class="status-item">
-              <div class="status-item-label">Knowledge Base</div>
-              <div class="status-item-val">
-                <span>92 फसलें (ICAR DB)</span>
-              </div>
-            </div>
-          </div>
-
-          <div style="font-size: 12px; color: var(--gov-muted); line-height: 1.4; margin-bottom: 14px;">
-            💡 यदि सर्वर <strong>Offline</strong> दिखे, तो प्रोजेक्ट फोल्डर में <code>start_cropguard.bat</code> चलाएं।
-          </div>
-
-          <button id="auto-redirect-btn" class="btn-scan" onclick="launchPortal()">
-            पोर्टल में प्रवेश करें (Enter Portal)
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- Page Content Wrapper -->
-    <main class="page-wrapper">
-      
-      <!-- Instant Leaf Scan Sandbox directly on index.html -->
-      <section id="instant-scanner" class="sandbox-card">
-        <div class="section-heading">
-          <h3 class="section-title">
-            <span>🔬 त्वरित पत्ती जांच सैंडबॉक्स (Instant Leaf Scanner)</span>
-          </h3>
-          <p class="section-sub">
-            यहाँ सीधे किसी भी फसल की पत्ती अपलोड करके 134-डायमेंशनल AI मॉडल से तत्काल ICAR रिपोर्ट प्राप्त करें।
-          </p>
-        </div>
-
-        <div class="sandbox-grid">
-          <div>
-            <label style="font-size: 13px; font-weight: 700; color: var(--gov-navy);">1. फसल चुनें (Select Crop):</label>
-            <select id="quick-crop-select" class="crop-select">
-              <optgroup label="अनाज (Cereals)">
-                <option value="wheat">गेहूं (Wheat)</option>
-                <option value="rice">धान / चावल (Rice)</option>
-                <option value="maize">मक्का (Maize)</option>
-                <option value="barley">जौ (Barley)</option>
-                <option value="pearl-millet-bajra">बाजरा (Bajra)</option>
-                <option value="sorghum-jowar">ज्वार (Jowar)</option>
-                <option value="finger-millet-ragi">रागी (Ragi)</option>
-              </optgroup>
-              <optgroup label="सब्जियां (Vegetables)">
-                <option value="tomato" selected>टमाटर (Tomato)</option>
-                <option value="potato">आलू (Potato)</option>
-                <option value="onion">प्याज (Onion)</option>
-                <option value="brinjal">बैंगन (Brinjal)</option>
-                <option value="chilli">मिर्च (Chilli)</option>
-                <option value="capsicum">शिमला मिर्च (Capsicum)</option>
-                <option value="okra">भिंडी (Okra)</option>
-                <option value="cucumber">खीरा (Cucumber)</option>
-                <option value="cauliflower">फूलगोभी (Cauliflower)</option>
-                <option value="cabbage">पत्तागोभी (Cabbage)</option>
-              </optgroup>
-              <optgroup label="नकदी व व्यावसायिक फसलें (Cash Crops)">
-                <option value="cotton">कपास (Cotton)</option>
-                <option value="sugarcane">गन्ना (Sugarcane)</option>
-                <option value="soybean">सोयाबीन (Soybean)</option>
-                <option value="sunflower">सूरजमुखी (Sunflower)</option>
-                <option value="mustard">सरसों (Mustard)</option>
-                <option value="groundnut">मूंगफली (Groundnut)</option>
-              </optgroup>
-              <optgroup label="फल (Fruits)">
-                <option value="mango">आम (Mango)</option>
-                <option value="apple">सेब (Apple)</option>
-                <option value="grapes">अंगूर (Grapes)</option>
-                <option value="banana">केला (Banana)</option>
-                <option value="papaya">पपीता (Papaya)</option>
-                <option value="pomegranate">अनार (Pomegranate)</option>
-                <option value="orange">संतरा / मौसमी (Orange)</option>
-                <option value="guava">अमरूद (Guava)</option>
-              </optgroup>
-              <optgroup label="दालें (Pulses)">
-                <option value="chickpea-gram">चना (Gram/Chickpea)</option>
-                <option value="pigeon-pea-arhar">अरहर / तूर (Pigeon Pea)</option>
-                <option value="black-gram-urad">उड़द (Black Gram)</option>
-                <option value="green-gram-moong">मूंग (Green Gram)</option>
-                <option value="lentil-masoor">मसूर (Lentil)</option>
-              </optgroup>
-              <optgroup label="मसाले (Spices)">
-                <option value="turmeric">हल्दी (Turmeric)</option>
-                <option value="ginger">अदरक (Ginger)</option>
-                <option value="garlic">लहसुन (Garlic)</option>
-                <option value="black-pepper">काली मिर्च (Black Pepper)</option>
-                <option value="cardamom">इलायची (Cardamom)</option>
-              </optgroup>
-            </select>
-
-            <label style="font-size: 13px; font-weight: 700; color: var(--gov-navy);">2. पत्ती का फोटो डालें (Upload Leaf Photo):</label>
-            <div class="dropzone" id="quick-dropzone" onclick="document.getElementById('quick-file-input').click()">
-              <input type="file" id="quick-file-input" accept="image/*" style="display: none;" onchange="handleFileSelect(event)">
-              <div class="dropzone-icon">🍃</div>
-              <strong id="drop-prompt" style="font-size: 14px; color: var(--gov-navy);">फोटो चुनें या यहाँ खींच कर लाएं</strong>
-              <p style="font-size: 12px; color: var(--gov-muted); margin-top: 4px;">केवल पत्ती की नजदीक से साफ फोटो (दीवार/स्क्रीनशॉट रिजेक्ट होंगे)</p>
-            </div>
-
-            <button id="quick-scan-btn" class="btn-scan" style="margin-top: 14px;" onclick="runQuickScan()">
-              🔍 AI रोग जांच शुरू करें
-            </button>
-          </div>
-
-          <!-- Result Area -->
-          <div class="scan-result-card" id="quick-result-area">
-            <div id="result-placeholder" style="text-align: center; color: var(--gov-muted);">
-              <div style="font-size: 40px; margin-bottom: 8px;">📋</div>
-              <h4 style="font-size: 16px; font-weight: 700; color: var(--gov-navy); margin-bottom: 4px;">निदान रिपोर्ट यहाँ दिखाई देगी</h4>
-              <p style="font-size: 13px;">फसल चुनकर पत्ती का फोटो अपलोड करें और 'AI रोग जांच शुरू करें' दबाएं।</p>
-            </div>
-
-            <div id="result-content" style="display: none;">
-              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; border-bottom: 1px solid #E2E8F0; padding-bottom: 10px;">
-                <div>
-                  <span id="res-crop" style="font-size: 11px; font-weight: 800; text-transform: uppercase; background: #DCFCE7; color: #166534; padding: 2px 8px; border-radius: 4px;"></span>
-                  <h4 id="res-condition" style="font-size: 18px; font-weight: 800; color: var(--gov-navy); margin-top: 4px;"></h4>
-                </div>
-                <div style="text-align: right;">
-                  <span id="res-severity" style="font-size: 12px; font-weight: 700; padding: 3px 8px; border-radius: 12px;"></span>
-                  <div id="res-confidence" style="font-size: 12px; font-weight: 600; color: var(--gov-muted); margin-top: 4px;"></div>
-                </div>
-              </div>
-
-              <div style="font-size: 13px; margin-bottom: 10px;">
-                <strong style="color: var(--gov-navy);">लक्षण (Symptoms):</strong>
-                <p id="res-symptoms" style="color: #475569; margin-top: 2px;"></p>
-              </div>
-
-              <div style="background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 8px; padding: 10px 12px; font-size: 12.5px; margin-bottom: 10px;">
-                <strong style="color: #166534;">🌿 जैविक व रोकथाम उपाय:</strong>
-                <p id="res-bio" style="color: #14532D; margin-top: 2px;"></p>
-              </div>
-
-              <div style="background: #FEF3C7; border: 1px solid #FDE68A; border-radius: 8px; padding: 10px 12px; font-size: 12.5px;">
-                <strong style="color: #92400E;">💊 रासायनिक दवा की सही मात्रा (ICAR):</strong>
-                <p id="res-chem" style="color: #78350F; margin-top: 2px;"></p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- 92 Crops Agricultural Directory -->
-      <section id="crops-directory" style="margin-bottom: 40px;">
-        <div class="section-heading">
-          <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 12px;">
-            <div>
-              <h3 class="section-title">🌾 भारत की 92 फसलें (National Crop Repository)</h3>
-              <p class="section-sub">ICAR मानकों के अनुसार प्रत्येक फसल के लिए रोग लक्षण, कीट व बुवाई का विवरण</p>
-            </div>
-            <input type="text" id="crop-search" placeholder="🔍 फसल खोजें (जैसे: Wheat, Tomato, Cotton)..." 
-              style="padding: 8px 16px; border: 1.5px solid #CBD5E1; border-radius: 20px; font-size: 13.5px; width: 280px;"
-              oninput="filterCrops()">
-          </div>
-        </div>
-
-        <div class="crop-categories-bar">
-          <button class="cat-pill active" onclick="setCategoryFilter('all', this)">सभी 92 फसलें (All)</button>
-          <button class="cat-pill" onclick="setCategoryFilter('Cereals', this)">अनाज (Cereals)</button>
-          <button class="cat-pill" onclick="setCategoryFilter('Vegetables', this)">सब्जियां (Vegetables)</button>
-          <button class="cat-pill" onclick="setCategoryFilter('Fruits', this)">फल (Fruits)</button>
-          <button class="cat-pill" onclick="setCategoryFilter('Cash Crops', this)">नकदी फसलें (Cash Crops)</button>
-          <button class="cat-pill" onclick="setCategoryFilter('Pulses', this)">दालें (Pulses)</button>
-          <button class="cat-pill" onclick="setCategoryFilter('Oilseeds', this)">तिलहन (Oilseeds)</button>
-          <button class="cat-pill" onclick="setCategoryFilter('Spices', this)">मसाले (Spices)</button>
-        </div>
-
-        <div class="crop-grid" id="crop-cards-container">
-          <!-- Dynamically populated or rendered below -->
-        </div>
-      </section>
-
-      <!-- Key Capabilities Section -->
-      <section style="margin-bottom: 40px;">
-        <div class="section-heading">
-          <h3 class="section-title">🛡️ पोर्टल की मुख्य विशेषताएं व सुरक्षा कवच</h3>
-          <p class="section-sub">किसानों को वैज्ञानिक, विश्वसनीय और सुरक्षित परामर्श प्रदान करने के लिए आधुनिक तकनीक</p>
-        </div>
-
-        <div class="features-grid">
-          <div class="feature-box" style="border-left-color: #15803D;">
-            <h3>🔬 134-Dim AI Leaf Pathology</h3>
-            <p>3,060 असली खेतों की पत्तियों से 134-आयामी रंग, क्लोरोफिल (ExG), बनावट, नस विन्यास और स्पैटियल ग्रिड से सटीक रोग पहचान।</p>
-          </div>
-          <div class="feature-box" style="border-left-color: #D97706;">
-            <h3>🚫 गैर-पत्ती रिजेक्शन गेट</h3>
-            <p>दीवार, कपड़ा, चेहरा, स्क्रीनशॉट या पोस्टर अपलोड होने पर मॉडल उसे तुरंत पहचानकर खारिज करता है ताकि गलत दवा न मिले।</p>
-          </div>
-          <div class="feature-box" style="border-left-color: #2563EB;">
-            <h3>⚠️ गलत फसल चयन चेतावनी</h3>
-            <p>यदि कपास चुनकर टमाटर की पत्ती डाली गई हो, तो मॉडल तुरंत चेतावनी देकर सही फसल चुनने की सलाह देता है।</p>
-          </div>
-          <div class="feature-box" style="border-left-color: #7C3AED;">
-            <h3>🐛 कीट ETL प्रबंधन</h3>
-            <p>फॉल आर्मीवॉर्म, तना छेदक और रस चूसक कीटों के लिए आर्थिक नुकसान सीमा (ETL) पर आधारित जैविक व रासायनिक नियंत्रण।</p>
-          </div>
-        </div>
-      </section>
-
-    </main>
-
-    <!-- Official Footer -->
-    <footer class="gov-footer">
-      <div class="footer-container">
-        <div>
-          <div class="footer-title">कृषि रक्षक (CropGuard AI)</div>
-          <p style="line-height: 1.6; margin-bottom: 14px;">
-            राष्ट्रीय फसल स्वास्थ्य व कीट निगरानी पोर्टल, भारत सरकार के कृषि एवं किसान कल्याण मंत्रालय तथा 
-            भारतीय कृषि अनुसंधान परिषद (ICAR) के सहयोग से विकसित।
-          </p>
-          <div style="font-size: 12px; color: #E2E8F0;">
-            📍 राष्ट्रीय कृषि विज्ञान परिसर (NASC), पूसा, नई दिल्ली - 110012
-          </div>
-        </div>
-
-        <div>
-          <div class="footer-title">त्वरित संपर्क व हेल्पलाइन</div>
-          <ul class="footer-links">
-            <li>📞 <strong style="color: #FDE68A;">1800-180-1551</strong> (टोल-फ्री किसान कॉल सेंटर)</li>
-            <li>📧 सहायता ईमेल: helpdesk-krishi@gov.in</li>
-            <li>🏛️ नजदीकी कृषि विज्ञान केंद्र (KVK)</li>
-            <li>🌾 तालुका कृषि अधिकारी कार्यालय</li>
-          </ul>
-        </div>
-
-        <div>
-          <div class="footer-title">सरकारी कृषि पोर्टल लिंक</div>
-          <ul class="footer-links">
-            <li><a href="https://pmkisan.gov.in/" target="_blank">PM-KISAN सम्मान निधि</a></li>
-            <li><a href="https://pmfby.gov.in/" target="_blank">प्रधानमंत्री फसल बीमा (PMFBY)</a></li>
-            <li><a href="https://enam.gov.in/" target="_blank">राष्ट्रीय कृषि बाजार (e-NAM)</a></li>
-            <li><a href="https://icar.org.in/" target="_blank">भारतीय कृषि अनुसंधान परिषद (ICAR)</a></li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="footer-bottom">
-        <div>
-          &copy; 2026 कृषि रक्षक (CropGuard AI). सर्वाधिकार सुरक्षित | भारत सरकार कृषि डिजिटल पहल
-        </div>
-        <div>
-          National Informatics Centre (NIC) & ICAR दिशानिर्देशों के अनुरूप
-        </div>
-      </div>
-    </footer>
-
-    <!-- Client-side Logic for Health Checks, Sandbox, and 92 Crops Grid -->
     <script>
-      let isFeOnline = false;
-      let isBeOnline = false;
-      let selectedFile = null;
+      let redirected = false;
 
-      // Primary crops data for quick client-side rendering
-      const FEATURED_CROPS = [
-        { slug: "wheat", name: "गेहूं (Wheat)", sci: "Triticum aestivum", cat: "Cereals", seasons: "रबी (Rabi)", diseases: "Yellow Rust, Brown Rust, Karnal Bunt", ai: true },
-        { slug: "rice", name: "धान (Rice)", sci: "Oryza sativa", cat: "Cereals", seasons: "खरीफ / रबी", diseases: "Blast, Bacterial Leaf Blight, Brown Spot", ai: true },
-        { slug: "cotton", name: "कपास (Cotton)", sci: "Gossypium hirsutum", cat: "Cash Crops", seasons: "खरीफ (Kharif)", diseases: "Bacterial Blight, Leaf Curl, Boll Rot", ai: true },
-        { slug: "soybean", name: "सोयाबीन (Soybean)", sci: "Glycine max", cat: "Oilseeds", seasons: "खरीफ (Kharif)", diseases: "Rust, Frogeye Leaf Spot, Yellow Mosaic", ai: true },
-        { slug: "maize", name: "मक्का (Maize)", sci: "Zea mays", cat: "Cereals", seasons: "खरीफ / जायद", diseases: "Common Rust, Northern Leaf Blight, Downy Mildew", ai: true },
-        { slug: "sugarcane", name: "गन्ना (Sugarcane)", sci: "Saccharum officinarum", cat: "Cash Crops", seasons: "वार्षिक (Annual)", diseases: "Red Rot, Smut, Grassy Shoot", ai: true },
-        { slug: "tomato", name: "टमाटर (Tomato)", sci: "Solanum lycopersicum", cat: "Vegetables", seasons: "तीनों मौसम", diseases: "Early Blight, Late Blight, Leaf Curl Virus", ai: true },
-        { slug: "potato", name: "आलू (Potato)", sci: "Solanum tuberosum", cat: "Vegetables", seasons: "रबी (Rabi)", diseases: "Early Blight, Late Blight, Black Scurf", ai: true },
-        { slug: "onion", name: "प्याज (Onion)", sci: "Allium cepa", cat: "Vegetables", seasons: "खरीफ व रबी", diseases: "Purple Blotch, Stemphylium Blight, Downy Mildew", ai: true },
-        { slug: "chilli", name: "मिर्च (Chilli)", sci: "Capsicum annuum", cat: "Spices", seasons: "खरीफ / जायद", diseases: "Anthracnose, Leaf Curl, Powdery Mildew", ai: true },
-        { slug: "mango", name: "आम (Mango)", sci: "Mangifera indica", cat: "Fruits", seasons: "ग्रीष्म (Summer)", diseases: "Anthracnose, Powdery Mildew, Dieback", ai: true },
-        { slug: "grapes", name: "अंगूर (Grapes)", sci: "Vitis vinifera", cat: "Fruits", seasons: "रबी (Rabi)", diseases: "Downy Mildew, Powdery Mildew, Black Rot", ai: true },
-        { slug: "banana", name: "केला (Banana)", sci: "Musa acuminata", cat: "Fruits", seasons: "वार्षिक (Annual)", diseases: "Panama Wilt, Sigatoka Leaf Spot, Bunchy Top", ai: true },
-        { slug: "mustard", name: "सरसों (Mustard)", sci: "Brassica juncea", cat: "Oilseeds", seasons: "रबी (Rabi)", diseases: "White Rust, Alternaria Blight, Downy Mildew", ai: true },
-        { slug: "chickpea-gram", name: "चना (Chickpea)", sci: "Cicer arietinum", cat: "Pulses", seasons: "रबी (Rabi)", diseases: "Fusarium Wilt, Ascochyta Blight, Collar Rot", ai: true },
-        { slug: "pigeon-pea-arhar", name: "अरहर (Arhar)", sci: "Cajanus cajan", cat: "Pulses", seasons: "खरीफ (Kharif)", diseases: "Wilt, Phytophthora Stem Blight, Sterility Mosaic", ai: true },
-        { slug: "apple", name: "सेब (Apple)", sci: "Malus domestica", cat: "Fruits", seasons: "शीतकालीन (Temperate)", diseases: "Apple Scab, Black Rot, Powdery Mildew", ai: true },
-        { slug: "turmeric", name: "हल्दी (Turmeric)", sci: "Curcuma longa", cat: "Spices", seasons: "खरीफ (Kharif)", diseases: "Rhizome Rot, Leaf Spot, Leaf Blotch", ai: true },
-        { slug: "groundnut", name: "मूंगफली (Groundnut)", sci: "Arachis hypogaea", cat: "Oilseeds", seasons: "खरीफ (Kharif)", diseases: "Tikka Leaf Spot, Rust, Collar Rot", ai: true },
-        { slug: "pomegranate", name: "अनार (Pomegranate)", sci: "Punica granatum", cat: "Fruits", seasons: "मृग / हस्त बहार", diseases: "Bacterial Blight (Telya), Anthracnose, Wilt", ai: true },
-        { slug: "papaya", name: "पपीता (Papaya)", sci: "Carica papaya", cat: "Fruits", seasons: "वार्षिक (Annual)", diseases: "Papaya Ring Spot Virus, Anthracnose, Foot Rot", ai: true },
-        { slug: "sunflower", name: "सूरजमुखी (Sunflower)", sci: "Helianthus annuus", cat: "Oilseeds", seasons: "जायद / खरीफ", diseases: "Alternaria Blight, Rust, Head Rot", ai: true },
-        { slug: "okra", name: "भिंडी (Okra)", sci: "Abelmoschus esculentus", cat: "Vegetables", seasons: "जायद व खरीफ", diseases: "Yellow Vein Mosaic Virus, Powdery Mildew", ai: true },
-        { slug: "cucumber", name: "खीरा (Cucumber)", sci: "Cucumis sativus", cat: "Vegetables", seasons: "जायद (Zaid)", diseases: "Downy Mildew, Powdery Mildew, Mosaic Virus", ai: true },
-      ];
+      function doRedirect(targetUrl) {
+        if (!redirected) {
+          redirected = true;
+          document.getElementById('open-btn').textContent = 'Opening ' + targetUrl + '...';
+          setTimeout(() => {
+            window.location.href = targetUrl;
+          }, 600);
+        }
+      }
 
-      let currentCategory = 'all';
-
-      function renderCrops(items) {
-        const container = document.getElementById('crop-cards-container');
-        container.innerHTML = '';
-        items.forEach(c => {
-          const card = document.createElement('div');
-          card.className = 'crop-card';
-          card.innerHTML = `
-            <div>
-              <div class="crop-badge-row">
-                <span class="crop-cat-tag">${c.cat}</span>
-                <span class="crop-ai-tag">AI मॉडल समर्थित</span>
-              </div>
-              <div class="crop-name">${c.name}</div>
-              <div class="crop-sci">${c.sci}</div>
-            </div>
-            <div class="crop-details">
-              <div><strong>सीजन:</strong> ${c.seasons}</div>
-              <div><strong>प्रमुख रोग:</strong> ${c.diseases}</div>
-            </div>
-          `;
-          container.appendChild(card);
+      // Check port 3000
+      fetch('http://localhost:3000/', { mode: 'no-cors' })
+        .then(() => {
+          const el = document.getElementById('fe-status');
+          el.className = 'status-badge badge-online';
+          el.innerHTML = '<span class="dot"></span>Online';
+          doRedirect('http://localhost:3000');
+        })
+        .catch(() => {
+          const el = document.getElementById('fe-status');
+          el.className = 'status-badge badge-offline';
+          el.innerHTML = '<span class="dot"></span>Offline';
         });
-      }
 
-      function filterCrops() {
-        const query = document.getElementById('crop-search').value.toLowerCase().trim();
-        const filtered = FEATURED_CROPS.filter(c => {
-          const matchesCat = (currentCategory === 'all' || c.cat === currentCategory);
-          const matchesQuery = !query || c.name.toLowerCase().includes(query) || c.sci.toLowerCase().includes(query) || c.diseases.toLowerCase().includes(query);
-          return matchesCat && matchesQuery;
-        });
-        renderCrops(filtered);
-      }
-
-      function setCategoryFilter(cat, btn) {
-        currentCategory = cat;
-        document.querySelectorAll('.cat-pill').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        filterCrops();
-      }
-
-      // Initial Render
-      renderCrops(FEATURED_CROPS);
-
-      // Server Health Check Logic
-      function checkServers() {
-        // Port 3000
-        fetch('http://localhost:3000/', { mode: 'no-cors' })
-          .then(() => {
-            isFeOnline = true;
-            document.getElementById('port-3000-val').innerHTML = '<span style="color:#15803D;">● Port 3000 (Online)</span>';
-            updateOverall();
-          })
-          .catch(() => {
-            isFeOnline = false;
-            document.getElementById('port-3000-val').innerHTML = '<span style="color:#DC2626;">● Port 3000 (Offline)</span>';
-            updateOverall();
-          });
-
-        // Port 8000
-        fetch('http://localhost:8000/api/health', { mode: 'cors' })
-          .then(res => res.json())
-          .then(() => {
-            isBeOnline = true;
-            document.getElementById('port-8000-val').innerHTML = '<span style="color:#15803D;">● Port 8000 (Online)</span>';
-            updateOverall();
-          })
-          .catch(() => {
-            isBeOnline = false;
-            document.getElementById('port-8000-val').innerHTML = '<span style="color:#DC2626;">● Port 8000 (Offline)</span>';
-            updateOverall();
-          });
-      }
-
-      function updateOverall() {
-        const pill = document.getElementById('overall-status');
-        if (isFeOnline && isBeOnline) {
-          pill.className = 'status-pill pill-online';
-          pill.innerHTML = '<span class="pulse-dot"></span>सभी सेवाएं सक्रिय (100% Online)';
-        } else if (isFeOnline || isBeOnline) {
-          pill.className = 'status-pill pill-checking';
-          pill.innerHTML = '<span class="pulse-dot"></span>आंशिक सक्रिय (Partial Online)';
-        } else {
-          pill.className = 'status-pill pill-offline';
-          pill.innerHTML = '<span class="pulse-dot"></span>सर्वर बंद है (Offline)';
-        }
-      }
-
-      function launchPortal() {
-        if (isFeOnline) {
-          window.location.href = 'http://localhost:3000';
-        } else if (isBeOnline) {
-          window.location.href = 'http://localhost:8000';
-        } else {
-          alert('सर्वर अभी चालू नहीं है। कृपया start_cropguard.bat चलाएं या http://localhost:3000 खोलें।');
-        }
-      }
-
-      checkServers();
-      setInterval(checkServers, 8000);
-
-      // File Drag & Drop Sandbox Logic
-      function handleFileSelect(e) {
-        const files = e.target.files;
-        if (files && files[0]) {
-          selectedFile = files[0];
-          document.getElementById('drop-prompt').textContent = '✅ ' + selectedFile.name + ' (' + Math.round(selectedFile.size/1024) + ' KB)';
-        }
-      }
-
-      const dropzone = document.getElementById('quick-dropzone');
-      dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.style.borderColor = '#15803D'; });
-      dropzone.addEventListener('dragleave', () => { dropzone.style.borderColor = '#CBD5E1'; });
-      dropzone.addEventListener('drop', (e) => {
-        e.preventDefault();
-        dropzone.style.borderColor = '#CBD5E1';
-        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-          selectedFile = e.dataTransfer.files[0];
-          document.getElementById('drop-prompt').textContent = '✅ ' + selectedFile.name + ' (' + Math.round(selectedFile.size/1024) + ' KB)';
-        }
-      });
-
-      async function runQuickScan() {
-        if (!selectedFile) {
-          alert('कृपया पहले अपनी फसल की पत्ती का फोटो चुनें!');
-          return;
-        }
-
-        const cropType = document.getElementById('quick-crop-select').value;
-        const btn = document.getElementById('quick-scan-btn');
-        btn.disabled = true;
-        btn.textContent = '⏳ पत्ती का विश्लेषण हो रहा है...';
-
-        const formData = new FormData();
-        formData.append('crop_type', cropType);
-        formData.append('file', selectedFile);
-
-        // Try hitting port 8000 directly, fallback to port 3000
-        const endpoints = ['http://localhost:8000/api/detection/analyze', 'http://localhost:3000/api/detection/analyze'];
-        let success = false;
-
-        for (const ep of endpoints) {
-          try {
-            const res = await fetch(ep, {
-              method: 'POST',
-              body: formData
-            });
-            if (res.ok) {
-              const data = await res.json();
-              displayResult(data);
-              success = true;
-              break;
+      // Check port 8000
+      fetch('http://localhost:8000/api/health', { mode: 'cors' })
+        .then(res => res.json())
+        .then(() => {
+          const el = document.getElementById('be-status');
+          el.className = 'status-badge badge-online';
+          el.innerHTML = '<span class="dot"></span>Online';
+          // If port 3000 is down but 8000 is up, redirect to 8000
+          setTimeout(() => {
+            if (!redirected) {
+              doRedirect('http://localhost:8000');
             }
-          } catch (err) {
-            console.log('Endpoint failed:', ep, err);
-          }
-        }
-
-        if (!success) {
-          alert('बैकएंड सर्वर से संपर्क नहीं हो सका। कृपया सुनिश्चित करें कि http://localhost:8000 सक्रिय है।');
-        }
-
-        btn.disabled = false;
-        btn.textContent = '🔍 AI रोग जांच शुरू करें';
-      }
-
-      function displayResult(data) {
-        document.getElementById('result-placeholder').style.display = 'none';
-        const content = document.getElementById('result-content');
-        content.style.display = 'block';
-
-        document.getElementById('res-crop').textContent = data.crop || 'Foliage';
-        document.getElementById('res-condition').textContent = data.condition;
-        
-        const sevEl = document.getElementById('res-severity');
-        sevEl.textContent = 'संक्रमण: ' + (data.severity || 'सामान्य').toUpperCase();
-        if (data.severity === 'healthy') {
-          sevEl.style.background = '#DCFCE7';
-          sevEl.style.color = '#15803D';
-        } else if (data.severity === 'severe') {
-          sevEl.style.background = '#FEE2E2';
-          sevEl.style.color = '#B91C1C';
-        } else {
-          sevEl.style.background = '#FEF3C7';
-          sevEl.style.color = '#B45309';
-        }
-
-        document.getElementById('res-confidence').textContent = 'सटीकता: ' + Math.round((data.confidence || 0.85) * 100) + '%';
-        document.getElementById('res-symptoms').textContent = data.symptoms || 'लक्षण उपलब्ध नहीं हैं।';
-        document.getElementById('res-bio').textContent = data.biological_control || data.cultural_control || 'उचित निगरानी व संतुलित खाद का प्रयोग करें।';
-        document.getElementById('res-chem').textContent = data.chemical_control || 'फसल स्वस्थ होने पर किसी दवा की आवश्यकता नहीं है।';
-      }
+          }, 1200);
+        })
+        .catch(() => {
+          const el = document.getElementById('be-status');
+          el.className = 'status-badge badge-offline';
+          el.innerHTML = '<span class="dot"></span>Offline';
+        });
     </script>
   </body>
 </html>
